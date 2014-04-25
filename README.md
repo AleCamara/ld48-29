@@ -1,4 +1,4 @@
-ld48-29
+Unnamed!
 =======
 
-My game for the 29th edition of LD48
+The competition has not started yet, but the hype is building up!
