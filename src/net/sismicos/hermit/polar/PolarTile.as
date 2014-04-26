@@ -25,23 +25,16 @@ package net.sismicos.hermit.polar
 			}
 		}
 		
-		public function PolarTile(_r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1, _callback:Function = null):void
+		public function PolarTile(_color:uint, _r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1, _callback:Function = null):void
 		{
 			super(_r, _p, _rs, _ps);
+			
+			color = _color;
 			
 			if (null != _callback) collideCallback = _callback;
 			else collideCallback = DefaultCollide;
 			
 			UpdateGraphics();
-		}
-		
-		public function SetColor(_color:uint):void
-		{
-			if (_color != color)
-			{
-				color = _color;
-				UpdateGraphics();
-			}
 		}
 		
 		private function UpdateGraphics():void

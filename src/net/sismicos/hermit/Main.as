@@ -1,6 +1,7 @@
 package net.sismicos.hermit
 {
-	import org.flixel.*;
+	import org.flixel.FlxG;
+	import org.flixel.FlxGame;
 	
 	import net.sismicos.hermit.gamestates.DefaultState;
 	
@@ -11,6 +12,7 @@ package net.sismicos.hermit
 		public function Main()
 		{
 			super(800, 800, DefaultState, 1);
+			FlxG.bgColor = 0x444444;
 		}
 	}
 	

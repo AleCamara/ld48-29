@@ -1,7 +1,11 @@
 package net.sismicos.hermit.polar 
 {
+	import flash.display.BlendMode;
+	import flash.geom.ColorTransform;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
+	import flash.geom.Rectangle;
+	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
 	import net.sismicos.hermit.Assets;
@@ -28,12 +32,22 @@ package net.sismicos.hermit.polar
 		private var prevR:Number = 0;
 		private var prevPhi:Number = 0;
 		
+		private var camera:FlxCamera;
+		
 		public function PolarPlayer(_r:Number = 10, _p:Number = 0, _rs:Number = 0.1, _ps:Number = 0.1) 
 		{
 			super(_r, _p, _rs, _ps);
 			
+			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+			camera.antialiasing = true;
+			camera.bgColor = 0x00000000;
+			FlxG.addCamera(camera);
+			
+			cameras = new Array();
+			cameras[0] = camera;
+			
 			antialiasing = false;
-			color = 0xFF0000;
+			color = 0xE0E0E0;
 			offset.x = 5;
 			offset.y = 5;
 			
@@ -86,6 +100,12 @@ package net.sismicos.hermit.polar
 			ddr -= gravity * timestep;
 		}
 		
+		override public function draw():void
+		{
+			camera.buffer.colorTransform(camera.buffer.rect, new ColorTransform(1, 1, 1, 0.9));
+			super.draw();
+		}
+		
 		private function UpdatePosition():void
 		{
 			// Make sure r is always positive
@@ -103,6 +123,8 @@ package net.sismicos.hermit.polar
 			// Orient apex toward centre
 			var a:Number = PolarAux.GetAngleFromIndex(p) * (180.0 / Math.PI) - 90;
 			angle = a;
+			
+			camera.angle = -(GetPhiInitial() * (180.0 / Math.PI)) - 90;
 		}
 		
 		public function CollidesWith(object:PolarObject):void

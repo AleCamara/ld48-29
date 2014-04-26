@@ -1,8 +1,12 @@
 package net.sismicos.hermit.gamestates 
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import net.sismicos.hermit.polar.PolarPlayer;
 	import net.sismicos.hermit.polar.PolarTileMap;
+	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
+	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxText;
@@ -11,29 +15,34 @@ package net.sismicos.hermit.gamestates
 	import net.sismicos.hermit.polar.PolarTile;
 	import net.sismicos.hermit.polar.PolarAux;
 	import net.sismicos.hermit.Assets;
+	import net.sismicos.hermit.utils.ColorAux;
 	
 	public class DefaultState extends FlxState
 	{
-		private var tilemap:PolarTileMap;
-		private var player:PolarPlayer;
+		private var tilemaps:Array = null;
+		private var player:PolarPlayer = null;
+		
+		private var activeTilemap:PolarTileMap;
 		
 		override public function create(): void
 		{
-			if (!cameras)
-			{
-				cameras = FlxG.cameras;
-				for (var i:uint = 0; i < cameras.length; ++i)
-				{
-					cameras[i].antialiasing = true;
-				}
-			}
+			cameras = FlxG.cameras;
+			cameras[0].bgColor = 0xFF444444;
 			
-			tilemap = new PolarTileMap()
-			tilemap.LoadMap(Assets.LVL_DUMMY);
+			if (!tilemaps) tilemaps = new Array();
+			tilemaps[0] = new PolarTileMap(0, ColorAux.GetTileColor(0, 0))
+			tilemaps[0].LoadMap(Assets.LVL_DUMMY);
+			tilemaps[1] = new PolarTileMap(0.4, ColorAux.GetTileColor(0, 1))
+			tilemaps[1].LoadMap(Assets.LVL_DUMMY2);
+			tilemaps[2] = new PolarTileMap(0.1, ColorAux.GetTileColor(0, 2))
+			tilemaps[2].LoadMap(Assets.LVL_DUMMY);
+			activeTilemap = tilemaps[0];
+			
+			add(tilemaps[2]);
+			add(tilemaps[1]);
+			add(tilemaps[0]);
 			
 			player = new PolarPlayer();
-			
-			add(tilemap);
 			add(player);
 		}
 		
@@ -41,20 +50,17 @@ package net.sismicos.hermit.gamestates
 		{
 			super.update();
 			
-			tilemap.overlaps(player);
+			activeTilemap.overlaps(player);
 			
-			UpdateCamera();
+			UpdateCameras();
 		}
 		
-		private function UpdateCamera():void
+		private function UpdateCameras():void
 		{
-			if (player && cameras && (cameras.length > 0))
+			var playerPhi:Number = player.GetPhiInitial() * (180.0 / Math.PI);
+			for (var i:uint; i < tilemaps.length; ++i)
 			{
-				var playerPhi:Number = player.GetPhiInitial() * (180.0 / Math.PI);
-				for (var i:uint; i < cameras.length; ++i)
-				{
-					cameras[i].angle = -playerPhi - 90;
-				}
+				tilemaps[i].UpdateCameraRotation(-playerPhi - 90);
 			}
 		}
 	}

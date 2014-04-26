@@ -1,6 +1,8 @@
 package net.sismicos.hermit.polar 
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.geom.Point;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxBasic;
@@ -13,12 +15,28 @@ package net.sismicos.hermit.polar
 	{
 		private var tiles:Array;
 		private var isDirty:Boolean = true;
-		private var buffers:Array;
 		
-		public function PolarTileMap() 
+		private var tileBuffer:BitmapData;
+		
+		private var color:uint;
+		
+		private var camera:FlxCamera;
+		
+		public function PolarTileMap(_zoom:Number = 0, _color:uint = 0xE0E0E0)
 		{
 			tiles = new Array();
-			buffers = new Array();
+			color = _color;
+			
+			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+			camera.zoom = _zoom;
+			camera.antialiasing = true;
+			camera.bgColor = 0x00000000;
+			FlxG.addCamera(camera);
+			
+			cameras = new Array();
+			cameras[0] = camera;
+			
+			UpdateBuffer();
 		}
 		
 		public function LoadMap(image:Class):void
@@ -36,27 +54,17 @@ package net.sismicos.hermit.polar
 					
 					if (tempBM.getPixel(j, i) != 0xFFFFFF)
 					{
-						AddTile(r, p, new PolarTile(r, p));
+						AddTile(r, p, new PolarTile(color, r, p));
 					}
 				}
 			}
+			
+			UpdateBuffer();
 		}
 		
-		public function AddTile(r:uint, p:uint, tile:PolarTile):void
+		public function UpdateCameraRotation(rotation:Number):void
 		{
-			tiles.push(tile);
-		}
-		
-		override public function draw():void
-		{
-			super.draw();
-			
-			if (isDirty) UpdateBuffers();
-			
-			for (var c:int; c < cameras.length; ++c)
-			{
-				cameras[c].buffer.copyPixels(buffers[c], buffers[c].rect, new Point(0, 0));
-			}
+			camera.angle = rotation;
 		}
 		
 		override public function overlaps(object:FlxBasic, inScreenSpace:Boolean = false, camera:FlxCamera = null):Boolean
@@ -83,23 +91,17 @@ package net.sismicos.hermit.polar
 			return result;
 		}
 		
-		private function UpdateBuffers():void
+		private function AddTile(r:uint, p:uint, tile:PolarTile):void
 		{
-			if (!visible) return;
-			
-			if (!cameras) cameras = FlxG.cameras;
-			for (var c:int = 0; c < cameras.length; ++c)
+			tiles.push(tile);
+		}
+		
+		private function UpdateBuffer():void
+		{
+			for (var i:int = 0; i < tiles.length; ++i)
 			{
-				if (!buffers[c]) buffers[c] = new BitmapData(FlxG.width, FlxG.height, true, 0x444444);
-				
-				var buffer:BitmapData = buffers[c];
-				for (var i:int = 0; i < tiles.length; ++i)
-				{
-					if (tiles[i]) buffer.draw(tiles[i].s);
-				}
+				if (tiles[i]) camera.buffer.draw(tiles[i].s);
 			}
-			
-			isDirty = false;
 		}
 	}
 
