@@ -18,14 +18,18 @@ package net.sismicos.hermit.polar
 		
 		private var tileBuffer:BitmapData;
 		
-		private var color:uint;
-		
 		private var camera:FlxCamera;
 		
-		public function PolarTileMap(_zoom:Number = 0, _color:uint = 0xE0E0E0)
+		// ZOOMING
+		private const ZOOM_TIME:Number = 4;
+		private var zooming:Boolean = false;
+		private var zoomingSpeed:Number;
+		private var zoomingTarget:Number = 0;
+		private var onZoomingEndCallback:Function = null;
+		
+		public function PolarTileMap(_zoom:Number = 1)
 		{
 			tiles = new Array();
-			color = _color;
 			
 			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 			camera.zoom = _zoom;
@@ -52,9 +56,24 @@ package net.sismicos.hermit.polar
 					var r:uint = tempBM.height - i - 1;
 					var p:uint = j;
 					
-					if (tempBM.getPixel(j, i) != 0xFFFFFF)
+					var pixelColor:uint = tempBM.getPixel(j, i);
+					if (pixelColor != 0xFFFFFF)
 					{
-						AddTile(r, p, new PolarTile(color, r, p));
+						var tileType:PolarTileType;
+						switch(pixelColor)
+						{
+							case 0xFF0000:
+								tileType = PolarTileType.DANGEROUS;
+								break;
+							case 0x00FF00:
+								tileType = PolarTileType.GOAL;
+								break;
+							default:
+								tileType = PolarTileType.NORMAL;
+								break;
+						}
+						
+						AddTile(r, p, new PolarTile(tileType, r, p));
 					}
 				}
 			}
@@ -65,6 +84,29 @@ package net.sismicos.hermit.polar
 		public function UpdateCameraRotation(rotation:Number):void
 		{
 			camera.angle = rotation;
+		}
+		
+		public function BeginZooming(target:Number, callback:Function = null):void
+		{
+			zooming = true;
+			zoomingSpeed = (target - camera.zoom) / ZOOM_TIME;
+			zoomingTarget = target;
+			onZoomingEndCallback = callback;
+		}
+		
+		override public function update():void
+		{
+			super.update();
+			
+			if (zooming)
+			{
+				camera.zoom += zoomingSpeed * FlxG.elapsed;
+				if (camera.zoom > zoomingTarget)
+				{
+					if (null != onZoomingEndCallback) onZoomingEndCallback();
+					zooming = false;
+				}
+			}
 		}
 		
 		override public function overlaps(object:FlxBasic, inScreenSpace:Boolean = false, camera:FlxCamera = null):Boolean

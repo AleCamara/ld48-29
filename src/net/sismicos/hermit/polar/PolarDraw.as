@@ -136,7 +136,7 @@ package net.sismicos.hermit.polar
 			
 			// Draw the arc from in1 to in0
 			angle = startAngle;
-			for (var i:int = 0; i < numOfSegs-1; i++) 
+			for (var j:int = 0; j < numOfSegs-1; i++) 
 			{
 				angle += segAngle;
 				angleMid = angle - (segAngle / 2);

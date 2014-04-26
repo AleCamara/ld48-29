@@ -34,6 +34,11 @@ package net.sismicos.hermit.polar
 		
 		private var camera:FlxCamera;
 		
+		private var unmovable:Boolean = false;
+		
+		private var hasWon:Boolean = false;
+		private var hasDied:Boolean = false;
+		
 		public function PolarPlayer(_r:Number = 10, _p:Number = 0, _rs:Number = 0.1, _ps:Number = 0.1) 
 		{
 			super(_r, _p, _rs, _ps);
@@ -54,6 +59,18 @@ package net.sismicos.hermit.polar
 			loadGraphic(Assets.PNG_PLAYER, false);
 		}
 		
+		public function MakeUnmovable():void
+		{
+			unmovable = true;
+			ddp = 0;
+			ddr = 0;
+		}
+		
+		public function MakeMovable():void
+		{
+			unmovable = false;
+		}
+		
 		override public function update():void
 		{
 			super.update();
@@ -62,26 +79,29 @@ package net.sismicos.hermit.polar
 			prevPhi = GetPhiIndex();
 			
 			var timestep:Number = FlxG.elapsed;
-			
-			// Lateral displacement
-			if (FlxG.keys.RIGHT)
+				
+			if (!unmovable)
 			{
-				ddp += dp;
-			}
-			if (FlxG.keys.LEFT)
-			{
-				ddp -= dp;
-			}
-			
-			// Vertical displacement
-			if (isTouchingFloor && FlxG.keys.justPressed("UP"))
-			{
-				ddr += dr;
-				isTouchingFloor = false;
-			}
-			if (FlxG.keys.justReleased("UP"))
-			{
-				ddr = 0;
+				// Lateral displacement
+				if (FlxG.keys.RIGHT)
+				{
+					ddp += dp;
+				}
+				if (FlxG.keys.LEFT)
+				{
+					ddp -= dp;
+				}
+				
+				// Vertical displacement
+				if (isTouchingFloor && FlxG.keys.justPressed("UP"))
+				{
+					ddr += dr;
+					isTouchingFloor = false;
+				}
+				if (FlxG.keys.justReleased("UP"))
+				{
+					ddr = 0;
+				}
 			}
 			
 			// Clamp displacement
@@ -133,6 +153,20 @@ package net.sismicos.hermit.polar
 			var newPhi:Number = p;
 			var finalR:Number = newR;
 			var finalPhi:Number = newPhi;
+			
+			if (object is PolarTile)
+			{
+				var tile:PolarTile = object as PolarTile;
+				switch (tile.GetType())
+				{
+					case PolarTileType.DANGEROUS:
+						hasDied = true;
+						break;
+					case PolarTileType.GOAL:
+						hasWon = true;
+						break;
+				}
+			}
 			
 			r = prevR;
 			if (object.GetPolarRect().Overlaps(GetPolarRect()))

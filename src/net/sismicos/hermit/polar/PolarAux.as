@@ -9,12 +9,12 @@ package net.sismicos.hermit.polar
 		public static const centerX:Number = FlxG.width / 2;
 		public static const centerY:Number = FlxG.height / 2;
 		
-		public static const numRadii:int = 10;
+		public static const numRadii:int = 15;
 		public static const innerRadii:Number = 200.0;
 		public static const outerRadii:Number = 375.0;
 		public static const deltaR:Number = (outerRadii - innerRadii) / (numRadii - 1);
 		
-		public static const numAngles:int = 20;
+		public static const numAngles:int = 40;
 		public static const deltaA:Number = 2.0 * Math.PI / (numAngles - 1);
 		
 		public static function GetRadiusFromIndex(index:Number):Number

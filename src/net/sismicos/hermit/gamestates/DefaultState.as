@@ -30,11 +30,11 @@ package net.sismicos.hermit.gamestates
 			cameras[0].bgColor = 0xFF444444;
 			
 			if (!tilemaps) tilemaps = new Array();
-			tilemaps[0] = new PolarTileMap(0, ColorAux.GetTileColor(0, 0))
+			tilemaps[0] = new PolarTileMap(1)
 			tilemaps[0].LoadMap(Assets.LVL_DUMMY);
-			tilemaps[1] = new PolarTileMap(0.4, ColorAux.GetTileColor(0, 1))
+			tilemaps[1] = new PolarTileMap(0.4)
 			tilemaps[1].LoadMap(Assets.LVL_DUMMY2);
-			tilemaps[2] = new PolarTileMap(0.1, ColorAux.GetTileColor(0, 2))
+			tilemaps[2] = new PolarTileMap(0.1)
 			tilemaps[2].LoadMap(Assets.LVL_DUMMY);
 			activeTilemap = tilemaps[0];
 			
@@ -53,6 +53,11 @@ package net.sismicos.hermit.gamestates
 			activeTilemap.overlaps(player);
 			
 			UpdateCameras();
+		}
+		
+		private function OnZoomingFinished(object:PolarTileMap):void
+		{
+			
 		}
 		
 		private function UpdateCameras():void
