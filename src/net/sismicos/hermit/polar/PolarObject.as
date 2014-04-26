@@ -49,6 +49,11 @@ package net.sismicos.hermit.polar
 			return ps;
 		}
 		
+		public function GetPhiSpan():Number
+		{
+			return PolarAux.GetAngleFromIndex(ps);
+		}
+		
 		public function GetPhiInitial():Number
 		{
 			return PolarAux.GetAngleFromIndex(p);
@@ -62,10 +67,10 @@ package net.sismicos.hermit.polar
 		public function GetPolarRect():PolarRect
 		{
 			var r0:Number = GetInRadius();
-			var p0:Number = GetPhiInitial();
 			var r1:Number = GetOutRadius();
-			var p1:Number = GetPhiFinal();
-			return new PolarRect(r0, p0, r1 - r0, p1 - p0);
+			var p0:Number = GetPhiInitial();
+			var pSpan:Number = GetPhiSpan();
+			return new PolarRect(r0, p0, r1 - r0, pSpan);
 		}
 	}
 }

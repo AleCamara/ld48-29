@@ -29,23 +29,12 @@ package net.sismicos.hermit.polar
 		
 		public function ContainsPoint(point:PolarPoint):Boolean
 		{
-			//// Some magic due to cyclicity of angle
-			//var pR:Number = PolarAux.GetAngleFromIndex(point.r);
-			//var pPhi:Number = point.phi - phi;
-			//while (pPhi < 0)
-			//{
-			//	pPhi += 2 * Math.PI;
-			//}
-			//pPhi = PolarAux.GetAngleFromIndex(pPhi);
-			//
-			//var sPhiSpan = PolarAux.GetAngleFromIndex(phiSpan);
-			//var sR = PolarAux.GetRadiusFromIndex(r);
-			//var sRSpan = PolarAux.GetRadiusFromIndex(rSpan);			
-			//
-			//return (pR > sR) && ((pR - sR) < sRSpan) && (pPhi < sPhiSpan);
+			while (point.phi < 0) point.phi += 2 * Math.PI;
+			while (point.phi >= 2 * Math.PI) point.phi -= 2 * Math.PI;
 			
 			return ((point.r > r) && ((point.r - r) <= rSpan)
-				&& (point.phi > phi) && ((point.phi - phi) <= phiSpan));
+				&& (((point.phi >= phi) && ((point.phi - phi) <= phiSpan)) 
+					|| ((phi > point.phi) && (((2 * Math.PI) + point.phi - phi) <= phiSpan))));
 		}
 		
 		public function ContainsPolarRect(rect:PolarRect):Boolean

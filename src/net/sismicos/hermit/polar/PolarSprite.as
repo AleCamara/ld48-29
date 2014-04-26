@@ -21,51 +21,56 @@ package net.sismicos.hermit.polar
 		
 		public function GetRadiusIndex():Number
 		{
-		  return r;
+			return r;
 		}
 		
 		public function GetRadiusSpanIndex():Number
 		{
-		  return rs;
+			return rs;
 		}
 		
 		public function GetInRadius():Number
 		{
-		  return PolarAux.GetRadiusFromIndex(r);
+			return PolarAux.GetRadiusFromIndex(r);
 		}
 		
 		public function GetOutRadius():Number
 		{
-		  return PolarAux.GetRadiusFromIndex(r + rs);
+			return PolarAux.GetRadiusFromIndex(r + rs);
 		}
 		
 		public function GetPhiIndex():Number
 		{
-		 return p;
+			return p;
 		}
 		
 		public function GetPhiSpanIndex():Number
 		{
-		  return ps;
+			return ps;
+		}
+		
+		public function GetPhiSpan():Number
+		{
+			return PolarAux.GetAngleFromIndex(ps);
 		}
 		
 		public function GetPhiInitial():Number
 		{
-		  return PolarAux.GetAngleFromIndex(p);
+			return PolarAux.GetAngleFromIndex(p);
 		}
 		
 		public function GetPhiFinal():Number
 		{
-		  return PolarAux.GetAngleFromIndex(p + ps);
+			return PolarAux.GetAngleFromIndex(p + ps);
 		}
 		
 		public function GetPolarRect():PolarRect
 		{
 			var r0:Number = GetInRadius();
-			var p0:Number = GetPhiInitial();
 			var r1:Number = GetOutRadius();
-			var p1:Number = GetPhiFinal();
-			return new PolarRect(r0, p0, r1 - r0, p1 - p0);
+			var p0:Number = GetPhiInitial();
+			var pSpan:Number = GetPhiSpan();
+			return new PolarRect(r0, p0, r1 - r0, pSpan);
 		}
 	}
 
