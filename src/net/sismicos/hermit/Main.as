@@ -4,13 +4,13 @@ package net.sismicos.hermit
 	
 	import net.sismicos.hermit.gamestates.DefaultState;
 	
-	[SWF(width="640", height="360", backgroundColor="#444444")]
+	[SWF(width="800", height="800", backgroundColor="#444444")]
 	
 	public class Main extends FlxGame 
 	{
 		public function Main()
 		{
-			super(640, 360, DefaultState, 1);
+			super(800, 800, DefaultState, 1);
 		}
 	}
 	
