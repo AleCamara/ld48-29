@@ -13,59 +13,59 @@ package net.sismicos.hermit.polar
 		
 		public function PolarSprite(_r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1) 
 		{
-			r = _r;
-			p = _p;
-			rs = _rs;
-			ps = _ps;
+		  r = _r;
+		  p = _p;
+		  rs = _rs;
+		  ps = _ps;
 		}
 		
 		public function GetRadiusIndex():Number
 		{
-			return r;
+		  return r;
 		}
 		
 		public function GetRadiusSpanIndex():Number
 		{
-			return rs;
+		  return rs;
 		}
 		
-		public function GetRadius():Number
+		public function GetInRadius():Number
 		{
-			return PolarAux.GetRadiusFromIndex(r);
+		  return PolarAux.GetRadiusFromIndex(r);
 		}
 		
-		public function GetRadiusSpan():Number
+		public function GetOutRadius():Number
 		{
-			return PolarAux.GetRadiusFromIndex(rs);
+		  return PolarAux.GetRadiusFromIndex(r + rs);
 		}
 		
 		public function GetPhiIndex():Number
 		{
-			return p;
+		 return p;
 		}
 		
 		public function GetPhiSpanIndex():Number
 		{
-			return ps;
+		  return ps;
 		}
 		
-		public function GetPhi():Number
+		public function GetPhiInitial():Number
 		{
-			return PolarAux.GetAngleFromIndex(p);
+		  return PolarAux.GetAngleFromIndex(p);
 		}
 		
-		public function GetPhiSpan():Number
+		public function GetPhiFinal():Number
 		{
-			return PolarAux.GetAngleFromIndex(ps);
+		  return PolarAux.GetAngleFromIndex(p + ps);
 		}
 		
-		public function GetPolarRect():FlxRect
+		public function GetPolarRect():PolarRect
 		{
-			var rn:Number = PolarAux.GetRadiusFromIndex(r);
-			var pn:Number = PolarAux.GetRadiusFromIndex(p);
-			var rsn:Number = PolarAux.GetRadiusFromIndex(rs);
-			var psn:Number = PolarAux.GetRadiusFromIndex(ps);
-			return new FlxRect(rn, pn, rsn, psn);
+			var r0:Number = GetInRadius();
+			var p0:Number = GetPhiInitial();
+			var r1:Number = GetOutRadius();
+			var p1:Number = GetPhiFinal();
+			return new PolarRect(r0, p0, r1 - r0, p1 - p0);
 		}
 	}
 

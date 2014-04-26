@@ -17,26 +17,6 @@ package net.sismicos.hermit.gamestates
 		private var tilemap:PolarTileMap;
 		private var player:PolarPlayer;
 		
-		public static function separate(o1:FlxObject, o2:FlxObject):Boolean
-		{
-			if ((o1 is PolarPlayer) && (o2 is PolarTile))
-			{
-				return separate(o2, o1);
-			}
-			if (!(o1 is PolarTile) && !(o2 is PolarPlayer))
-			{
-				return false;
-			}
-			
-			var tile:PolarTile = o1 as PolarTile;
-			var player:PolarPlayer = o2 as PolarPlayer;
-			
-			var tileRect:FlxRect = tile.GetPolarRect();
-			var playerRect:FlxRect = player.GetPolarRect();
-			
-			return false;
-		}
-		
 		override public function create(): void
 		{
 			if (!cameras)
@@ -63,14 +43,14 @@ package net.sismicos.hermit.gamestates
 			
 			if (player && cameras && (cameras.length > 0))
 			{
-				var playerPhi:Number = player.GetPhi() * (180.0 / Math.PI);
+				var playerPhi:Number = player.GetPhiInitial() * (180.0 / Math.PI);
 				for (var i:uint; i < cameras.length; ++i)
 				{
 					cameras[i].angle = playerPhi - 90;
 				}
 			}
 			
-			//FlxG.collide(tilemap, player);
+			FlxG.collide(tilemap, player);
 		}
 	}
 

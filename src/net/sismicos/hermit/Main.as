@@ -1,6 +1,6 @@
 package net.sismicos.hermit
 {
-	import org.flixel.FlxGame;
+	import org.flixel.*;
 	
 	import net.sismicos.hermit.gamestates.DefaultState;
 	

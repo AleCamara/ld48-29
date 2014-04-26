@@ -16,7 +16,7 @@ package net.sismicos.hermit.polar
 		
 		private var ddr:Number = -0.5;
 		
-		public function PolarPlayer(_r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1) 
+		public function PolarPlayer(_r:Number = 10, _p:Number = 0, _rs:Number = 1, _ps:Number = 1) 
 		{
 			super(_r, _p, _rs, _ps);
 			

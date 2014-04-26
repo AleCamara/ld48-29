@@ -1,8 +1,8 @@
 package net.sismicos.hermit.polar 
 {
 	import org.flixel.FlxObject;
-	import org.flixel.FlxRect;
 	import net.sismicos.hermit.polar.PolarAux;
+	import net.sismicos.hermit.polar.PolarRect;
 	
 	public class PolarObject extends FlxObject
 	{
@@ -59,14 +59,13 @@ package net.sismicos.hermit.polar
 			return PolarAux.GetAngleFromIndex(p + ps);
 		}
 		
-		public function GetPolarRect():FlxRect
+		public function GetPolarRect():PolarRect
 		{
 			var r0:Number = GetInRadius();
 			var p0:Number = GetPhiInitial();
 			var r1:Number = GetOutRadius();
 			var p1:Number = GetPhiFinal();
-			return new FlxRect(r0, p0, r1 - r0, p1 - p0);
+			return new PolarRect(r0, p0, r1 - r0, p1 - p0);
 		}
 	}
-
 }

@@ -11,12 +11,14 @@ package net.sismicos.hermit.polar
 	public class PolarTile extends PolarObject
 	{
 		internal var s:Shape = new Shape();
-		
 		private var color:uint = 0xE0E0E0;
 		
-		public function PolarTile(_r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1):void
+		internal var collideCallback:Function;
+		
+		public function PolarTile(_r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1, _callback:Function = null):void
 		{
 			super(_r, _p, _rs, _ps);
+			collideCallback = _callback;
 			UpdateGraphics();
 		}
 		

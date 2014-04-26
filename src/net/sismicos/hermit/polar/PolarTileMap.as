@@ -7,6 +7,7 @@ package net.sismicos.hermit.polar
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxG;
+	import net.sismicos.hermit.polar.PolarRect;
 	
 	public class PolarTileMap extends FlxObject
 	{
@@ -16,8 +17,7 @@ package net.sismicos.hermit.polar
 		
 		public function PolarTileMap() 
 		{
-			const numTiles:uint = PolarAux.numAngles * PolarAux.numRadii;
-			tiles = new Array(numTiles);
+			tiles = new Array();
 			buffers = new Array();
 		}
 		
@@ -62,9 +62,21 @@ package net.sismicos.hermit.polar
 		
 		override public function overlaps(object:FlxBasic, inScreenSpace:Boolean = false, camera:FlxCamera = null):Boolean
 		{
-			if (object is PolarPlayer)
+			if (object is PolarSprite)
 			{
-				
+				var sprite:PolarSprite = object as PolarSprite;
+				var spRect:PolarRect = sprite.GetPolarRect();
+					
+				for (var i:uint = 0; i < tiles.length; ++i)
+				{
+					var tile:PolarTile = tiles[i] as PolarTile;
+					var tileRect:PolarRect = tile.GetPolarRect();
+					
+					if (tileRect.ContainsPolarRect(spRect) && (null != tile.collideCallback))
+					{
+						tile.collideCallback(object);
+					}
+				}
 			}
 			
 			return false;
