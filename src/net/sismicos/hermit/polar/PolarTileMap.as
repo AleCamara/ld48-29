@@ -44,8 +44,7 @@ package net.sismicos.hermit.polar
 		
 		public function AddTile(r:uint, p:uint, tile:PolarTile):void
 		{
-			const index:uint = p * PolarAux.numRadii + r;
-			tiles[index] = tile;
+			tiles.push(tile);
 		}
 		
 		override public function draw():void
@@ -62,6 +61,7 @@ package net.sismicos.hermit.polar
 		
 		override public function overlaps(object:FlxBasic, inScreenSpace:Boolean = false, camera:FlxCamera = null):Boolean
 		{
+			var result:Boolean = false;
 			if (object is PolarSprite)
 			{
 				var sprite:PolarSprite = object as PolarSprite;
@@ -72,20 +72,22 @@ package net.sismicos.hermit.polar
 					var tile:PolarTile = tiles[i] as PolarTile;
 					var tileRect:PolarRect = tile.GetPolarRect();
 					
-					if (tileRect.ContainsPolarRect(spRect) && (null != tile.collideCallback))
+					if ((null != tile.collideCallback) && tileRect.Overlaps(spRect))
 					{
-						tile.collideCallback(object);
+						tile.collideCallback(tile, object);
+						result = true;
 					}
 				}
 			}
 			
-			return false;
+			return result;
 		}
 		
 		private function UpdateBuffers():void
 		{
 			if (!visible) return;
 			
+			if (!cameras) cameras = FlxG.cameras;
 			for (var c:int = 0; c < cameras.length; ++c)
 			{
 				if (!buffers[c]) buffers[c] = new BitmapData(FlxG.width, FlxG.height, true, 0x444444);

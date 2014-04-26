@@ -41,16 +41,21 @@ package net.sismicos.hermit.gamestates
 		{
 			super.update();
 			
+			tilemap.overlaps(player);
+			
+			UpdateCamera();
+		}
+		
+		private function UpdateCamera():void
+		{
 			if (player && cameras && (cameras.length > 0))
 			{
 				var playerPhi:Number = player.GetPhiInitial() * (180.0 / Math.PI);
 				for (var i:uint; i < cameras.length; ++i)
 				{
-					cameras[i].angle = playerPhi - 90;
+					cameras[i].angle = -playerPhi - 90;
 				}
 			}
-			
-			FlxG.collide(tilemap, player);
 		}
 	}
 

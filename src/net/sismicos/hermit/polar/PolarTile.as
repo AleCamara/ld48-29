@@ -5,6 +5,7 @@ package net.sismicos.hermit.polar
 	import flash.display.Shape;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxBasic;
 	import net.sismicos.hermit.polar.PolarDraw;
 	import net.sismicos.hermit.polar.PolarObject;
 	
@@ -15,10 +16,22 @@ package net.sismicos.hermit.polar
 		
 		internal var collideCallback:Function;
 		
+		public static function DefaultCollide(self:PolarTile, object:FlxBasic):void
+		{
+			if (object is PolarPlayer)
+			{
+				var player:PolarPlayer = object as PolarPlayer;
+				player.CollidesWith(self);
+			}
+		}
+		
 		public function PolarTile(_r:Number = 0, _p:Number = 0, _rs:Number = 1, _ps:Number = 1, _callback:Function = null):void
 		{
 			super(_r, _p, _rs, _ps);
-			collideCallback = _callback;
+			
+			if (null != _callback) collideCallback = _callback;
+			else collideCallback = DefaultCollide;
+			
 			UpdateGraphics();
 		}
 		

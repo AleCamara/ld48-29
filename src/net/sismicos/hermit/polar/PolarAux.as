@@ -37,7 +37,7 @@ package net.sismicos.hermit.polar
 		public static function CalculateCartesianPoint(radius:Number, angle:Number):FlxPoint
 		{
 			var x:Number = centerX + radius * Math.cos(angle);
-			var y:Number = centerY - radius * Math.sin(angle);
+			var y:Number = centerY + radius * Math.sin(angle);
 			return new FlxPoint(x, y);
 		}
 		
