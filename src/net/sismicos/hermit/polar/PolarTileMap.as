@@ -2,6 +2,9 @@ package net.sismicos.hermit.polar
 {
 	import flash.display.BitmapData;
 	import flash.geom.Point;
+	import org.flixel.FlxGroup;
+	import org.flixel.FlxBasic;
+	import org.flixel.FlxCamera;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxG;
 	
@@ -57,24 +60,28 @@ package net.sismicos.hermit.polar
 			}
 		}
 		
+		override public function overlaps(object:FlxBasic, inScreenSpace:Boolean = false, camera:FlxCamera = null):Boolean
+		{
+			if (object is PolarPlayer)
+			{
+				
+			}
+			
+			return false;
+		}
+		
 		private function UpdateBuffers():void
 		{
 			if (!visible) return;
 			
 			for (var c:int = 0; c < cameras.length; ++c)
 			{
-				if (!buffers[c])
-				{
-					buffers[c] = new BitmapData(FlxG.width, FlxG.height, true, 0x444444);
-				}
-				var buffer:BitmapData = buffers[c];
+				if (!buffers[c]) buffers[c] = new BitmapData(FlxG.width, FlxG.height, true, 0x444444);
 				
+				var buffer:BitmapData = buffers[c];
 				for (var i:int = 0; i < tiles.length; ++i)
 				{
-					if (tiles[i])
-					{
-						buffer.draw(tiles[i].s);
-					}
+					if (tiles[i]) buffer.draw(tiles[i].s);
 				}
 			}
 			

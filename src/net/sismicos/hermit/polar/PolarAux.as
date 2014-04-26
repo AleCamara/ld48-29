@@ -17,28 +17,35 @@ package net.sismicos.hermit.polar
 		public static const numAngles:int = 20;
 		public static const deltaA:Number = 2.0 * Math.PI / (numAngles - 1);
 		
-		public static function GetRadiusFromInt(index:int):Number
+		public static function GetRadiusFromIndex(index:Number):Number
 		{
 			return innerRadii + index * deltaR;
 		}
 		
-		public static function GetAngleFromInt(index:int):Number
+		public static function GetAngleFromIndex(index:Number):Number
 		{
-			return (index % numAngles) * deltaA;
+			return index * deltaA;
 		}
 		
-		public static function IsBitmapALevel(bm:BitmapData)
+		public static function IsBitmapALevel(bm:BitmapData):Boolean
 		{
 			if (bm.height != numRadii) return false;
 			if (bm.width != numAngles) return false;
 			return true;
 		}
 		
-		public static function CalculateStartingPoint(radius:Number, angle:Number):FlxPoint
+		public static function CalculateCartesianPoint(radius:Number, angle:Number):FlxPoint
 		{
 			var x:Number = centerX + radius * Math.cos(angle);
 			var y:Number = centerY - radius * Math.sin(angle);
 			return new FlxPoint(x, y);
+		}
+		
+		public static function CalculateCartesianPointFromIndex(radius:Number, angle:Number):FlxPoint
+		{
+			radius = GetRadiusFromIndex(radius);
+			angle = GetAngleFromIndex(angle);
+			return CalculateCartesianPoint(radius, angle);
 		}
 	}
 
