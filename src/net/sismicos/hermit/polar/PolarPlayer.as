@@ -18,11 +18,12 @@ package net.sismicos.hermit.polar
 		
 		private var isTouchingFloor:Boolean = false;
 		private var forceReleaseJump:Boolean = false;
+		private var doubleJumpEnabled:Boolean = false;
 		
 		private const gravity:Number = 1500;
 		private const lateralDrag:Number = 4;
 		
-		private const drMax:Number = 300;
+		private const drMax:Number = 500;
 		private const dpMax:Number = 150;
 		private var dr:Number = 1000;
 		private var dp:Number = 50;
@@ -49,7 +50,7 @@ package net.sismicos.hermit.polar
 		private var hasWon:Boolean = false;
 		private var hasDied:Boolean = false;
 		
-		public function PolarPlayer(_r:Number = 10, _p:Number = 0.5, _rs:Number = 0.1, _ps:Number = 0.1) 
+		public function PolarPlayer(_r:Number = 16, _p:Number = 0.5, _rs:Number = 0.1, _ps:Number = 0.1) 
 		{
 			super(_r, _p, _rs, _ps);
 			
@@ -157,7 +158,7 @@ package net.sismicos.hermit.polar
 						break;
 					case PolarTileType.GOAL:
 						hasWon = true;
-						UpdateCheckpoint(10, tile.GetPhiIndex());
+						UpdateCheckpoint(PolarAux.numRadii+1, 0);
 						break;
 				}
 				
@@ -180,6 +181,7 @@ package net.sismicos.hermit.polar
 				if (ddr < 0)
 				{
 					isTouchingFloor = true;
+					doubleJumpEnabled = false;
 				}
 				else
 				{
@@ -216,7 +218,7 @@ package net.sismicos.hermit.polar
 				}
 				
 				// Vertical displacement
-				if (isTouchingFloor && FlxG.keys.justPressed("UP"))
+				if ((isTouchingFloor || doubleJumpEnabled) && FlxG.keys.justPressed("UP"))
 				{
 					ddr += dr;
 					isTouchingFloor = false;
@@ -224,6 +226,7 @@ package net.sismicos.hermit.polar
 				if (forceReleaseJump || FlxG.keys.justReleased("UP"))
 				{
 					ddr = 0;
+					doubleJumpEnabled = (!forceReleaseJump && !doubleJumpEnabled);
 					forceReleaseJump = false;
 				}
 			}
