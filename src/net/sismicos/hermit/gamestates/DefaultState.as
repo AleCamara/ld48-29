@@ -17,6 +17,7 @@ package net.sismicos.hermit.gamestates
 	import net.sismicos.hermit.polar.PolarAux;
 	import net.sismicos.hermit.Assets;
 	import net.sismicos.hermit.utils.ColorAux;
+	import net.sismicos.hermit.polar.PolarTileMapLayer;
 	
 	public class DefaultState extends FlxState
 	{
@@ -25,7 +26,7 @@ package net.sismicos.hermit.gamestates
 		private const PLAYER_MOVE_FLASH_TIME:Number = 1.5;
 		private var player:PolarPlayer = null;
 		
-		private var activeTilemap:PolarTileMap;
+		private var activeTilemap:uint = 0;
 		
 		override public function create(): void
 		{
@@ -33,13 +34,12 @@ package net.sismicos.hermit.gamestates
 			cameras[0].bgColor = 0xFF444444;
 			
 			if (!tilemaps) tilemaps = new Array();
-			tilemaps[0] = new PolarTileMap(1)
+			tilemaps[0] = new PolarTileMap(PolarTileMapLayer.FIRST)
 			tilemaps[0].LoadMap(Assets.LVL_DUMMY);
-			tilemaps[1] = new PolarTileMap(0.4)
+			tilemaps[1] = new PolarTileMap(PolarTileMapLayer.SECOND)
 			tilemaps[1].LoadMap(Assets.LVL_DUMMY2);
-			tilemaps[2] = new PolarTileMap(0.1)
+			tilemaps[2] = new PolarTileMap(PolarTileMapLayer.THIRD)
 			tilemaps[2].LoadMap(Assets.LVL_DUMMY);
-			activeTilemap = tilemaps[0];
 			
 			add(tilemaps[2]);
 			add(tilemaps[1]);
@@ -53,13 +53,24 @@ package net.sismicos.hermit.gamestates
 		{
 			super.update();
 			
-			activeTilemap.overlaps(player);
+			(tilemaps[activeTilemap] as PolarTileMap).overlaps(player);
 			
 			// Check die condition
 			if (player.HasDied())
 			{
 				(cameras[0] as FlxCamera).flash(0xFFFFFFFF, PLAYER_MOVE_FLASH_TIME);
 				player.Undie();
+			}
+			if (player.HasWon())
+			{
+				(cameras[0] as FlxCamera).flash(0xFFFFFFFF, PLAYER_MOVE_FLASH_TIME);
+				for (var i:uint = 0; i < tilemaps.length; ++i)
+				{
+					(tilemaps[i] as PolarTileMap).BeginZooming();
+				}
+				activeTilemap = (activeTilemap + 1) % tilemaps.length;
+				player.Unwin();
+				player.MoveToLastCheckpoint();
 			}
 			
 			UpdateCameras();

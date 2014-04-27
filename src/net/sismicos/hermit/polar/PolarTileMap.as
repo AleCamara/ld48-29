@@ -10,6 +10,7 @@ package net.sismicos.hermit.polar
 	import org.flixel.FlxObject;
 	import org.flixel.FlxG;
 	import net.sismicos.hermit.polar.PolarRect;
+	import net.sismicos.hermit.polar.PolarTileMapLayer;
 	
 	public class PolarTileMap extends FlxObject
 	{
@@ -20,19 +21,23 @@ package net.sismicos.hermit.polar
 		
 		private var camera:FlxCamera;
 		
+		private var layer:PolarTileMapLayer;
+		
 		// ZOOMING
-		private const ZOOM_TIME:Number = 4;
+		private const ZOOM_TIME:Number = 2;
 		private var zooming:Boolean = false;
 		private var zoomingSpeed:Number;
-		private var zoomingTarget:Number = 0;
+		private var zoomingTime:Number;
 		private var onZoomingEndCallback:Function = null;
 		
-		public function PolarTileMap(_zoom:Number = 1)
+		public function PolarTileMap(_layer:PolarTileMapLayer)
 		{
+			layer = _layer;
+			
 			tiles = new Array();
 			
 			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-			camera.zoom = _zoom;
+			camera.zoom = layer.zoom;
 			camera.antialiasing = true;
 			camera.bgColor = 0x00000000;
 			FlxG.addCamera(camera);
@@ -90,12 +95,11 @@ package net.sismicos.hermit.polar
 			camera.angle = rotation;
 		}
 		
-		public function BeginZooming(target:Number, callback:Function = null):void
+		public function BeginZooming():void
 		{
 			zooming = true;
-			zoomingSpeed = (target - camera.zoom) / ZOOM_TIME;
-			zoomingTarget = target;
-			onZoomingEndCallback = callback;
+			zoomingSpeed = (layer.nextZoom - layer.zoom) / ZOOM_TIME;
+			zoomingTime = 0;
 		}
 		
 		override public function update():void
@@ -104,11 +108,11 @@ package net.sismicos.hermit.polar
 			
 			if (zooming)
 			{
+				zoomingTime += FlxG.elapsed;
 				camera.zoom += zoomingSpeed * FlxG.elapsed;
-				if (camera.zoom > zoomingTarget)
+				if (zoomingTime > ZOOM_TIME)
 				{
-					if (null != onZoomingEndCallback) onZoomingEndCallback();
-					zooming = false;
+					OnZoomingEnded();
 				}
 			}
 		}
@@ -148,6 +152,13 @@ package net.sismicos.hermit.polar
 			{
 				if (tiles[i]) camera.buffer.draw(tiles[i].s);
 			}
+		}
+		
+		private function OnZoomingEnded():void
+		{
+			layer = PolarTileMapLayer.GetNextLayer(layer);
+			camera.zoom = layer.zoom;
+			zooming = false;
 		}
 	}
 

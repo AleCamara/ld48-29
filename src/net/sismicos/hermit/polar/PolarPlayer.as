@@ -107,6 +107,11 @@ package net.sismicos.hermit.polar
 			hasDied = false;
 		}
 		
+		public function Unwin():void
+		{
+			hasWon = false;
+		}
+		
 		public function MakeUnmovable():void
 		{
 			unmovable = true;
@@ -152,6 +157,7 @@ package net.sismicos.hermit.polar
 						break;
 					case PolarTileType.GOAL:
 						hasWon = true;
+						UpdateCheckpoint(10, tile.GetPhiIndex());
 						break;
 				}
 				
