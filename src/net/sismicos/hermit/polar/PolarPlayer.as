@@ -17,14 +17,15 @@ package net.sismicos.hermit.polar
 		private var s:Shape = new Shape();
 		
 		private var isTouchingFloor:Boolean = false;
+		private var forceReleaseJump:Boolean = false;
 		
-		private const gravity:Number = 1000;
+		private const gravity:Number = 1500;
 		private const lateralDrag:Number = 4;
 		
 		private const drMax:Number = 300;
-		private const dpMax:Number = 100;
-		private var dr:Number = 500;
-		private var dp:Number = 100;
+		private const dpMax:Number = 150;
+		private var dr:Number = 1000;
+		private var dp:Number = 50;
 		
 		private var ddr:Number = 0;
 		private var ddp:Number = 0;
@@ -98,9 +99,10 @@ package net.sismicos.hermit.polar
 					ddr += dr;
 					isTouchingFloor = false;
 				}
-				if (FlxG.keys.justReleased("UP"))
+				if (forceReleaseJump || FlxG.keys.justReleased("UP"))
 				{
 					ddr = 0;
+					forceReleaseJump = false;
 				}
 			}
 			
@@ -122,6 +124,7 @@ package net.sismicos.hermit.polar
 		
 		override public function draw():void
 		{
+			// Funky and expensive trail effect
 			camera.buffer.colorTransform(camera.buffer.rect, new ColorTransform(1, 1, 1, 0.9));
 			super.draw();
 		}
@@ -179,7 +182,16 @@ package net.sismicos.hermit.polar
 			if (object.GetPolarRect().Overlaps(GetPolarRect()))
 			{
 				finalR = prevR;
-				isTouchingFloor = true;
+				
+				if (ddr < 0)
+				{
+					isTouchingFloor = true;
+				}
+				else
+				{
+					forceReleaseJump = true;
+				}
+				
 				ddr = 0;
 			}
 			
@@ -192,7 +204,7 @@ package net.sismicos.hermit.polar
 		override public function GetPolarRect():PolarRect
 		{
 			var r0:Number = GetInRadius() - height * 0.5;
-			var r1:Number = GetOutRadius() - height * 0.5;
+			var r1:Number = r0 + height;
 			
 			var arc:Number = Math.abs(Math.tan(width / r1));
 			var p0:Number = GetPhiInitial() - arc * 0.5;
