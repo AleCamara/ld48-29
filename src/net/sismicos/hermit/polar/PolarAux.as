@@ -3,6 +3,7 @@ package net.sismicos.hermit.polar
 	import flash.display.BitmapData;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
+	import net.sismicos.hermit.utils.ExtraMath;
 	
 	internal class PolarAux 
 	{
@@ -22,9 +23,26 @@ package net.sismicos.hermit.polar
 			return innerRadii + index * deltaR;
 		}
 		
+		public static function GetIndexFromRadius(radius:Number):Number
+		{
+			return ExtraMath.Clamp((radius - innerRadii) / deltaR, 0, numRadii);
+		}
+		
+		public static function GetIndexFromRadiusSpan(rSpan:Number):Number
+		{
+			return ExtraMath.Clamp(rSpan / deltaR, 0, numRadii);
+		}
+		
 		public static function GetAngleFromIndex(index:Number):Number
 		{
 			return index * deltaA;
+		}
+		
+		public static function GetIndexFromAngle(angle:Number):Number
+		{
+			while (angle < 0) angle += 2 * Math.PI;
+			while (angle >= 2 * Math.PI) angle -= 2 * Math.PI;
+			return angle / deltaA;
 		}
 		
 		public static function IsBitmapALevel(bm:BitmapData):Boolean

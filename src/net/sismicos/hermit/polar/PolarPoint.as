@@ -10,6 +10,13 @@ package net.sismicos.hermit.polar
 			r = _r;
 			phi = _phi;
 		}
+		
+		public function PolarDistanceTo(target:PolarPoint):Number
+		{
+			var dr:Number = r - target.r;
+			var dphi:Number = phi - target.phi;
+			return Math.sqrt(dr * dr + dphi * dphi);
+		}
 	}
 
 }

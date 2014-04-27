@@ -37,12 +37,14 @@ package net.sismicos.hermit.polar
 		
 		private var isCollidable:Boolean = true;
 		
+		private var checkpoint:PolarPoint;
+		
+		private const PLAYER_MOVE_TIME:Number = 2;
 		private var unmovable:Boolean = false;
 		private var isMoving:Boolean = false;
 		private var moveSpeedR:Number = 0;
 		private var moveSpeedPhi:Number = 0;
 		private var moveTime:Number = 0;
-		private var moveDuration:Number = 0;
 		
 		private var hasWon:Boolean = false;
 		private var hasDied:Boolean = false;
@@ -50,6 +52,8 @@ package net.sismicos.hermit.polar
 		public function PolarPlayer(_r:Number = 10, _p:Number = 0.5, _rs:Number = 0.1, _ps:Number = 0.1) 
 		{
 			super(_r, _p, _rs, _ps);
+			
+			checkpoint = new PolarPoint(_r, _p);
 			
 			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 			camera.antialiasing = true;
@@ -67,28 +71,35 @@ package net.sismicos.hermit.polar
 			loadGraphic(Assets.PNG_PLAYER, false);
 		}
 		
-		public function MoveTo(target:PolarPoint, duration:Number):void
+		public function MoveToLastCheckpoint(callback:Function = null):void
 		{
 			unmovable = true;
 			isCollidable = false;
 			isMoving = true;
 			
-			moveSpeedR = (target.r - r) / duration;
-			moveSpeedPhi = (target.phi - p) / duration;
+			moveSpeedR = (checkpoint.r - r) / PLAYER_MOVE_TIME;
+			moveSpeedPhi = (checkpoint.phi - p) / PLAYER_MOVE_TIME;
 			var altSpeedPhi:Number;
-			if (p > target.phi)
+			if (p > checkpoint.phi)
 			{
-				altSpeedPhi = ((target.phi + PolarAux.numAngles - 1) - p) / duration;
+				altSpeedPhi = ((checkpoint.phi + PolarAux.numAngles - 1) - p) / PLAYER_MOVE_TIME;
 				if (Math.abs(altSpeedPhi) < Math.abs(moveSpeedPhi)) moveSpeedPhi = altSpeedPhi;
 			}
 			else
 			{
-				altSpeedPhi = (p - (target.phi - PolarAux.numAngles + 1)) / duration;
+				altSpeedPhi = ((checkpoint.phi - PolarAux.numAngles + 1) - p) / PLAYER_MOVE_TIME;
 				if (Math.abs(altSpeedPhi) < Math.abs(moveSpeedPhi)) moveSpeedPhi = altSpeedPhi;
 			}
 			
 			moveTime = 0;
-			moveDuration = duration;
+			
+			if (null != callback) callback();
+		}
+		
+		public function Die():void
+		{
+			hasDied = true;
+			MoveToLastCheckpoint();
 		}
 		
 		public function Undie():void
@@ -129,16 +140,22 @@ package net.sismicos.hermit.polar
 			
 			if (object is PolarTile)
 			{
+				
 				var tile:PolarTile = object as PolarTile;
 				switch (tile.GetType())
 				{
+					case PolarTileType.CHECKPOINT:
+						UpdateCheckpoint(tile.GetRadiusIndex(), tile.GetPhiIndex());
+						break;
 					case PolarTileType.DANGEROUS:
-						hasDied = true;
+						Die();
 						break;
 					case PolarTileType.GOAL:
 						hasWon = true;
 						break;
 				}
+				
+				
 				if (!tile.isCollidable) return;
 			}
 			
@@ -168,7 +185,6 @@ package net.sismicos.hermit.polar
 			
 			r = finalR;
 			p = finalPhi;
-			
 			UpdatePosition();
 		}
 		
@@ -217,7 +233,7 @@ package net.sismicos.hermit.polar
 				ddrFinal = moveSpeedR;
 				ddpFinal = moveSpeedPhi;
 				
-				if (moveTime > moveDuration)
+				if (moveTime > PLAYER_MOVE_TIME)
 				{
 					OnMoveToFinished();
 				}
@@ -271,6 +287,21 @@ package net.sismicos.hermit.polar
 			angle = a;
 			
 			camera.angle = -(GetPhiInitial() * (180.0 / Math.PI)) - 90;
+			
+			// Update rect
+			var r1:Number = GetInRadius() + height * 0.5;
+			var arc:Number = Math.abs(Math.tan(width / r1));
+			rs = PolarAux.GetIndexFromRadiusSpan(height);
+			ps = PolarAux.GetIndexFromAngle(arc);
+		}
+		
+		private function UpdateCheckpoint(tileR:Number, tilePhi:Number):void
+		{
+			if (checkpoint.PolarDistanceTo(new PolarPoint(tileR, tilePhi)) > 2)
+			{
+				checkpoint.r = tileR + 1.2 + GetRadiusSpanIndex() * 0.5;
+				checkpoint.phi = tilePhi + 0.5 - GetPhiSpanIndex() * 0.5;
+			}
 		}
 		
 		private function OnMoveToFinished():void

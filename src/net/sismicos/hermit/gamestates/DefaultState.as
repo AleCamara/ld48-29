@@ -22,10 +22,8 @@ package net.sismicos.hermit.gamestates
 	{
 		private var tilemaps:Array = null;
 		
-		private const PLAYER_MOVE_TIME:Number = 2;
 		private const PLAYER_MOVE_FLASH_TIME:Number = 1.5;
 		private var player:PolarPlayer = null;
-		private var playerInitialPos:PolarPoint = null;
 		
 		private var activeTilemap:PolarTileMap;
 		
@@ -48,7 +46,6 @@ package net.sismicos.hermit.gamestates
 			add(tilemaps[0]);
 			
 			player = new PolarPlayer();
-			playerInitialPos = player.GetPolarPositionIndices();
 			add(player);
 		}
 		
@@ -62,7 +59,6 @@ package net.sismicos.hermit.gamestates
 			if (player.HasDied())
 			{
 				(cameras[0] as FlxCamera).flash(0xFFFFFFFF, PLAYER_MOVE_FLASH_TIME);
-				player.MoveTo(playerInitialPos, PLAYER_MOVE_TIME);
 				player.Undie();
 			}
 			
