@@ -14,18 +14,18 @@ package net.sismicos.hermit.gamestates
 		private var heart:FlxSprite;
 		
 		private var text:Array = [
-			"i'll never regret looking\nBENEATH THE SURFACE",
-			"i'll never regret looking\nBENEATH THE SURFACE",
-			"where i found the real you;\nthe one i fell for",
-			"where i found the real you;\nthe one i fell for",
+			"jamás me arrepentiré de haber mirado\nBAJO LA SUPERFICIE",
+			"jamás me arrepentiré de haber mirado\nBAJO LA SUPERFICIE",
+			"donde encontré tu verdadero yo;\ndel que me enamoré",
+			"donde encontré tu verdadero yo;\ndel que me enamoré",
 			"",
-			"dedicated to Maru\nwe make the best team ;-)",
-			"dedicated to Maru\nwe make the best team ;-)",
+			"dedicado a Maru\nhacemos el mejor equipo ;-)",
+			"dedicado a Maru\nhacemos el mejor equipo ;-)",
 			"",
-			"designed, programmed, tested, and hated in 48 hours",
-			"alejandro camara\napril 2014",
+			"diseñado, programado, probado y odiado en 48 horas",
+			"alejandro cámara\nabril 2014",
 			"",
-			"THANKS FOR PLAYING"];
+			"GRACIAS POR JUGAR"];
 		private var currentText:uint = 0;
 		private var label:FlxText;
 		

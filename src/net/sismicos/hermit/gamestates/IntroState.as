@@ -12,11 +12,11 @@ package net.sismicos.hermit.gamestates
 		private var player:PolarIntroPlayer;
 		
 		private var text:Array = [
-			"i love complex systems",
-			"a system can look trivial at first sight",
-			"but some times it's just appearances",
-			"something beautiful might be hidden",
-			"BENEATH THE SURFACE" ];
+			"me encantan los sistemas complejos",
+			"un sistema puede parecer trivial a primera vista",
+			"pero muchas veces las apariencias engañan",
+			"algo hermoso puede estar escondido",
+			"BAJO LA SUPERFICIE" ];
 		private var currentText:uint = 0;
 		private var label:FlxText;
 		

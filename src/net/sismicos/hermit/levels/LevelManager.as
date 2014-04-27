@@ -31,23 +31,23 @@ package net.sismicos.hermit.levels
 			LVL_10 ];
 			
 		private static const texts:Array = [
-			"systems are made of layers\nonce you understand a layer, you can proceed to the next one",
-			"understanding a system is a learning process; very rewarding ...",
-			"... and some times painful and frustrating",
-			"thankfully not all the things you learn are easily forgotten",
-			"this one i'm pointing at is the most complex system i've ever met",
-			"i've been studying systems for years, yet this one still surprises me often!",
-			"there's something here that strongly ATTRACTS me; like a moth to a flame",
-			"this obsesion might be dangerous, even fatal, but i can't help it",
-			"it's not how SHE is; it's more what i am when i'm close to HER",
+			"los sistemas están formados por capas\nuna vez que entiendes una capa, puedes ir a por la siguiente",
+			"entender una capa es un proceso educativo; muy reconfortante ...",
+			"... y a veces doloroso y frustrante",
+			"afortunadamente, no todas las cosas que aprendes se olvidan fácilmente",
+			"el sistema que tengo bajo los pies es uno de los más complejos que jamás he conocido",
+			"llevo años estudiando sistemas y sin embargo ¡este todavía consigue sorprenderme a menudo!",
+			"hay algo aquí que me ATRAE fuertemente; no me deja escapar",
+			"esta obsesión puede ser peligrosa, incluso fatal, pero nada puedo hacer",
+			"no es sobre cómo es ELLA; es más bien sobre cómo soy you cuando estoy a su lado",
 			"" ];
 			
 		
 		private static const tutorials:Array = [
-			"TUTORIAL: move our intrepid friend with left and right cursors",
-			"TUTORIAL: jump using cursor up; double jump pressing up again in mid-air",
-			"TUTORIAL: avoid red zone if you care for this little fellah",
-			"TUTORIAL: green zones are cool; they save your position in case you miss a jump",
+			"TUTORIAL: mueve a nuestro intrépido amigo con los cursores derecha e izquierda",
+			"TUTORIAL: salta usando el cursor arriba; doble salto pulsando arriba en medio del aire",
+			"TUTORIAL: evita las losas rojas si te preocupa nuestro pequeño colega",
+			"TUTORIAL: las zonas verdes son majas; recuerdan tu posición en caso de que falles algún salto",
 			"",
 			"",
 			"",
