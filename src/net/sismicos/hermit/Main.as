@@ -7,7 +7,7 @@ package net.sismicos.hermit
 	import net.sismicos.hermit.gamestates.TitleState;
 	import net.sismicos.hermit.utils.ColorAux;
 	
-	[SWF(width="800", height="800", backgroundColor="#444444")]
+	[SWF(width="800", height="800", backgroundColor="#505050")]
 	
 	public class Main extends FlxGame 
 	{

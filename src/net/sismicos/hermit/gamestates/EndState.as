@@ -57,7 +57,6 @@ package net.sismicos.hermit.gamestates
 			
 			player = new PolarEndPlayer();
 			player.MakeUnmovable();
-			add(player);
 			
 			label = new FlxText(100, 468, 600, "");
 			label.cameras = new Array();
@@ -66,12 +65,10 @@ package net.sismicos.hermit.gamestates
 			label.alignment = "center";
 			label.color = ColorAux.TEXT_COLOR;
 			label.shadow = ColorAux.TEXT_SHADOW_COLOR;
-			add(label);
 			
 			heart = new FlxSprite(350, 350, Assets.PNG_HEART);
 			heart.cameras = new Array();
 			heart.cameras[0] = cameras[0];
-			add(heart);
 		}
 		
 		override public function update():void
@@ -132,7 +129,15 @@ package net.sismicos.hermit.gamestates
 		private function NextFlash():void
 		{
 			if (endGameFlashes >= 0)
+			{
 				FlxG.flash(ColorAux.GetFinalFlashColor(endGameFlashes--), ColorAux.FINALFLASH_DURATION, NextFlash);
+			}
+			if (endGameFlashes < 0)
+			{
+				add(player);
+				add(label);
+				add(heart);
+			}
 			else isEndGameFlashes = false;
 		}
 	}
