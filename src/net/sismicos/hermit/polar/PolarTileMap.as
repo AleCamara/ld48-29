@@ -11,6 +11,8 @@ package net.sismicos.hermit.polar
 	import org.flixel.FlxG;
 	import net.sismicos.hermit.polar.PolarRect;
 	import net.sismicos.hermit.polar.PolarTileMapLayer;
+	import net.sismicos.hermit.levels.LevelManager;
+	import net.sismicos.hermit.levels.LevelDescription;
 	
 	public class PolarTileMap extends FlxObject
 	{
@@ -22,6 +24,8 @@ package net.sismicos.hermit.polar
 		private var camera:FlxCamera;
 		
 		private var layer:PolarTileMapLayer;
+		
+		private var level:LevelDescription;
 		
 		// ZOOMING
 		private const ZOOM_TIME:Number = 2;
@@ -45,47 +49,7 @@ package net.sismicos.hermit.polar
 			cameras = new Array();
 			cameras[0] = camera;
 			
-			UpdateBuffer();
-		}
-		
-		public function LoadMap(image:Class):void
-		{
-			var tempBM:BitmapData = FlxG.addBitmap(image);
-			if (!PolarAux.IsBitmapALevel(tempBM))
-				throw new Error("Trying to load a bitmap that does not represent a level.");
-			
-			for (var i:uint = 0; i < tempBM.height; ++i)
-			{
-				for (var j:uint = 0; j < tempBM.width; ++j)
-				{
-					var r:uint = tempBM.height - i - 1;
-					var p:uint = j;
-					
-					var pixelColor:uint = tempBM.getPixel(j, i);
-					if (pixelColor != 0xFFFFFF)
-					{
-						var tileType:PolarTileType;
-						switch(pixelColor)
-						{
-							case 0x0000FF:
-								tileType = PolarTileType.CHECKPOINT;
-								break;
-								
-							case 0xFF0000:
-								tileType = PolarTileType.DANGEROUS;
-								break;
-							case 0x00FF00:
-								tileType = PolarTileType.GOAL;
-								break;
-							default:
-								tileType = PolarTileType.NORMAL;
-								break;
-						}
-						
-						AddTile(r, p, new PolarTile(tileType, r, p));
-					}
-				}
-			}
+			LoadNextLevel();
 			
 			UpdateBuffer();
 		}
@@ -145,9 +109,14 @@ package net.sismicos.hermit.polar
 		{
 			tiles.push(tile);
 		}
+		private function ClearTiles():void
+		{
+			tiles.length = 0;
+		}
 		
 		private function UpdateBuffer():void
 		{
+			camera.buffer.fillRect(camera.buffer.rect, 0x00000000);
 			for (var i:int = 0; i < tiles.length; ++i)
 			{
 				if (tiles[i]) camera.buffer.draw(tiles[i].s);
@@ -156,9 +125,63 @@ package net.sismicos.hermit.polar
 		
 		private function OnZoomingEnded():void
 		{
+			if (layer == PolarTileMapLayer.FIRST) LoadNextLevel();
 			layer = PolarTileMapLayer.GetNextLayer(layer);
 			camera.zoom = layer.zoom;
 			zooming = false;
+		}
+		
+		private function LoadNextLevel():void
+		{
+			level = LevelManager.GetNextLevel();
+			LoadMap(level.data);
+		}
+		
+		private function LoadMap(image:Class):void
+		{
+			ClearTiles();
+			
+			if (null != image)
+			{
+				var tempBM:BitmapData = FlxG.addBitmap(image);
+				if (!PolarAux.IsBitmapALevel(tempBM))
+					throw new Error("Trying to load a bitmap that does not represent a level.");
+				
+				for (var i:uint = 0; i < tempBM.height; ++i)
+				{
+					for (var j:uint = 0; j < tempBM.width; ++j)
+					{
+						var r:uint = tempBM.height - i - 1;
+						var p:uint = j;
+						
+						var pixelColor:uint = tempBM.getPixel(j, i);
+						if (pixelColor != 0xFFFFFF)
+						{
+							var tileType:PolarTileType;
+							switch(pixelColor)
+							{
+								case 0x0000FF:
+									tileType = PolarTileType.CHECKPOINT;
+									break;
+									
+								case 0xFF0000:
+									tileType = PolarTileType.DANGEROUS;
+									break;
+								case 0x00FF00:
+									tileType = PolarTileType.GOAL;
+									break;
+								default:
+									tileType = PolarTileType.NORMAL;
+									break;
+							}
+							
+							AddTile(r, p, new PolarTile(tileType, r, p));
+						}
+					}
+				}
+			}
+			
+			UpdateBuffer();
 		}
 	}
 

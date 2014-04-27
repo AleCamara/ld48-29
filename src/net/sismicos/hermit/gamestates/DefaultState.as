@@ -35,12 +35,8 @@ package net.sismicos.hermit.gamestates
 			
 			if (!tilemaps) tilemaps = new Array();
 			tilemaps[0] = new PolarTileMap(PolarTileMapLayer.FIRST)
-			tilemaps[0].LoadMap(Assets.LVL_DUMMY);
 			tilemaps[1] = new PolarTileMap(PolarTileMapLayer.SECOND)
-			tilemaps[1].LoadMap(Assets.LVL_DUMMY2);
 			tilemaps[2] = new PolarTileMap(PolarTileMapLayer.THIRD)
-			tilemaps[2].LoadMap(Assets.LVL_DUMMY);
-			
 			add(tilemaps[2]);
 			add(tilemaps[1]);
 			add(tilemaps[0]);
