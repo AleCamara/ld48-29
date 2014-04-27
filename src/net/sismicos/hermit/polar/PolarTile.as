@@ -15,8 +15,11 @@ package net.sismicos.hermit.polar
 	{
 		internal var s:Shape = new Shape();
 		private var color:uint = 0xE0E0E0;
-		internal var collideCallback:Function;
+		
 		private var type:PolarTileType = PolarTileType.NORMAL;		
+		
+		internal var collideCallback:Function;
+		internal var isCollidable:Boolean = true;
 		
 		public static function DefaultCollide(self:PolarTile, object:FlxBasic):void
 		{
@@ -40,6 +43,10 @@ package net.sismicos.hermit.polar
 		public function SetType(type:PolarTileType):void
 		{
 			this.type = type;
+			if (type == PolarTileType.GOAL)
+			{
+				isCollidable = false;
+			}
 			
 			color = ColorAux.GetTileColor(type);
 			

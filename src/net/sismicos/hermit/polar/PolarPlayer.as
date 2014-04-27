@@ -169,6 +169,7 @@ package net.sismicos.hermit.polar
 						hasWon = true;
 						break;
 				}
+				if (!tile.isCollidable) return;
 			}
 			
 			r = prevR;
