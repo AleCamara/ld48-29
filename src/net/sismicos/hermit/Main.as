@@ -2,6 +2,7 @@ package net.sismicos.hermit
 {
 	import org.flixel.FlxG;
 	import org.flixel.FlxGame;
+	import net.sismicos.hermit.gamestates.EndState;
 	import net.sismicos.hermit.gamestates.PlayState;
 	import net.sismicos.hermit.gamestates.TitleState;
 	import net.sismicos.hermit.utils.ColorAux;

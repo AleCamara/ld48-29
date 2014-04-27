@@ -32,7 +32,7 @@ package net.sismicos.hermit.polar
 		
 		private var level:LevelDescription;
 		
-		public var textLabel:FlxText;
+		private var textLabel:FlxText;
 		
 		// TRANSITION ZOOM
 		private const ZOOM_TIME:Number = 2;
@@ -47,6 +47,12 @@ package net.sismicos.hermit.polar
 		private var zooming:Boolean = false;
 		private var zoomingSpeed:Number;
 		
+		private const ENDGAME_TIME:Number = 2;
+		private var endGameCount:Number = 0;
+		private var endGameTimer:Boolean = false;
+		private var endGameReady:Boolean = false;
+		public var endGame:Boolean = false;
+		
 		public function PolarTileMap(_layer:PolarTileMapLayer)
 		{
 			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
@@ -60,7 +66,7 @@ package net.sismicos.hermit.polar
 			textLabel = new FlxText(10, 10, 300, "");
 			textLabel.cameras = new Array();
 			textLabel.cameras[0] = FlxG.cameras[0];
-			textLabel.size = 10;
+			textLabel.size = 14;
 			textLabel.color = ColorAux.TEXT_COLOR;
 			textLabel.shadow = ColorAux.TEXT_SHADOW_COLOR;
 			textLabel.alignment = "center";
@@ -109,6 +115,15 @@ package net.sismicos.hermit.polar
 					zooming = false;
 				}
 			}
+			
+			if (!endGame && endGameTimer)
+			{
+				endGameCount += FlxG.elapsed;
+				if (endGameCount > ENDGAME_TIME)
+				{
+					endGame = true;
+				}
+			}
 		}
 		
 		override public function overlaps(object:FlxBasic, inScreenSpace:Boolean = false, camera:FlxCamera = null):Boolean
@@ -148,7 +163,17 @@ package net.sismicos.hermit.polar
 		{
 			this.layer = layer;
 			camera.zoom = layer.zoom;
-			if (layer == PolarTileMapLayer.FIRST) textLabel.visible = true;
+			if (layer == PolarTileMapLayer.FIRST)
+			{
+				if (endGameReady)
+				{
+					endGameTimer = true;
+				}
+				else
+				{
+					textLabel.visible = true;
+				}
+			}
 			else textLabel.visible = false;
 		}
 		
@@ -184,7 +209,12 @@ package net.sismicos.hermit.polar
 		private function LoadNextLevel():void
 		{
 			level = LevelManager.GetNextLevel();
-			LoadMap();
+			if (null != level) LoadMap();
+			else
+			{
+				ClearTiles();
+				UpdateBuffer();
+			}
 		}
 		
 		private function LoadMap():void
@@ -229,6 +259,10 @@ package net.sismicos.hermit.polar
 						}
 					}
 				}
+			}
+			else
+			{
+				endGameReady = true;
 			}
 			
 			if (null != level.text)

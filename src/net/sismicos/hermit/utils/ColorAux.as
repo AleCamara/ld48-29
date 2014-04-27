@@ -18,6 +18,13 @@ package net.sismicos.hermit.utils
 		public static const TEXT_COLOR:uint        = 0xFFE0E0E0;
 		public static const TEXT_SHADOW_COLOR:uint = NORMAL_COLOR;
 		
+		public static const FINALFLASH_DURATION:Number = 0.75;
+		public static const FINALFLASH_COLORS:Array = [
+			0xFF3CA0D0,
+			0xFFFF4040,
+			0xFF39E639,
+			0xFFFFA640 ];
+			
 		public static function GetTileColor(type:PolarTileType):uint
 		{
 			switch (type)
@@ -35,6 +42,11 @@ package net.sismicos.hermit.utils
 				default:
 					return NORMAL_COLOR;
 			}
+		}
+		
+		public static function GetFinalFlashColor(index:uint):uint
+		{
+			return FINALFLASH_COLORS[index];
 		}
 	}
 

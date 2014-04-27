@@ -5,6 +5,7 @@ package net.sismicos.hermit.gamestates
 	import org.flixel.FlxText;
 	import net.sismicos.hermit.utils.ColorAux;
 	import net.sismicos.hermit.polar.PolarIntroPlayer;
+	import net.sismicos.hermit.Assets;
 	
 	public class IntroState extends FlxState
 	{
@@ -28,6 +29,7 @@ package net.sismicos.hermit.gamestates
 		
 		override public function create():void
 		{
+			FlxG.play(Assets.MP3_RISS);
 			FlxG.flash(ColorAux.FADEFLASH_COLOR, ColorAux.FADEFLASH_DURATION, FlashFinished);
 			
 			cameras = FlxG.cameras;

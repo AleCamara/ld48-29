@@ -42,7 +42,7 @@ package net.sismicos.hermit.gamestates
 			tilemaps[0] = new PolarTileMap(PolarTileMapLayer.FIRST)
 			tilemaps[1] = new PolarTileMap(PolarTileMapLayer.SECOND)
 			tilemaps[2] = new PolarTileMap(PolarTileMapLayer.THIRD)
-			tilemaps[0].textLabel.visible = false;
+			//tilemaps[0].textLabel.visible = false;
 			add(tilemaps[2]);
 			add(tilemaps[1]);
 			add(tilemaps[0]);
@@ -61,7 +61,6 @@ package net.sismicos.hermit.gamestates
 				if (waitingCount > WAITINGSTART_TIME)
 				{
 					waitingStart = false;
-					(tilemaps[0] as PolarTileMap).textLabel.visible = true;
 				}
 			}
 			
@@ -85,6 +84,11 @@ package net.sismicos.hermit.gamestates
 				player.MoveToLastCheckpoint();
 			}
 			
+			if ((tilemaps[activeTilemap] as PolarTileMap).endGame)
+			{
+				FlxG.fade(ColorAux.FADEFLASH_COLOR, ColorAux.FADEFLASH_DURATION, LoadEndState);
+			}
+			
 			UpdateCameras();
 		}
 		
@@ -100,6 +104,11 @@ package net.sismicos.hermit.gamestates
 			{
 				tilemaps[i].UpdateCameraRotation(-playerPhi - 90);
 			}
+		}
+		
+		private function LoadEndState():void
+		{
+			FlxG.switchState(new EndState());
 		}
 	}
 

@@ -41,7 +41,7 @@ package net.sismicos.hermit.polar
 		
 		private var checkpoint:PolarPoint;
 		
-		private const PLAYER_MOVE_TIME:Number = 2;
+		private const PLAYER_MOVE_TIME:Number = 1;
 		private var unmovable:Boolean = false;
 		private var isMoving:Boolean = false;
 		private var moveSpeedR:Number = 0;
@@ -155,9 +155,11 @@ package net.sismicos.hermit.polar
 						UpdateCheckpoint(tile.GetRadiusIndex(), tile.GetPhiIndex());
 						break;
 					case PolarTileType.DANGEROUS:
+						FlxG.play(Assets.MP3_CUACK);
 						Die();
 						break;
 					case PolarTileType.GOAL:
+						FlxG.play(Assets.MP3_ZOOM);
 						hasWon = true;
 						UpdateCheckpoint(PolarAux.numRadii+1, 0);
 						break;
@@ -229,6 +231,7 @@ package net.sismicos.hermit.polar
 				{
 					ddr = dr;
 					isTouchingFloor = false;
+					FlxG.play(Assets.MP3_JUMP_SILENT);
 				}
 			}
 			
@@ -309,6 +312,7 @@ package net.sismicos.hermit.polar
 		{
 			if (checkpoint.PolarDistanceTo(new PolarPoint(tileR, tilePhi)) > 2)
 			{
+				FlxG.play(Assets.MP3_CHIUSS);
 				checkpoint.r = tileR + 1.2 + GetRadiusSpanIndex() * 0.5;
 				checkpoint.phi = tilePhi + 0.5 - GetPhiSpanIndex() * 0.5;
 			}

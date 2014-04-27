@@ -22,7 +22,7 @@ package net.sismicos.hermit.levels
 			LVL_01,
 			LVL_02,
 			LVL_03,
-			LVL_04,
+			//LVL_04,
 			LVL_05,
 			LVL_06,
 			LVL_07,
@@ -46,12 +46,16 @@ package net.sismicos.hermit.levels
 		
 		public static function GetNextLevel():LevelDescription
 		{
-			if (currentLevel >= levels.length)
-			{
-				return new LevelDescription(null, levels[currentLevel]);
-			}
-			
 			++currentLevel;
+			
+			if (currentLevel == levels.length)
+			{
+				return new LevelDescription(null, texts[currentLevel]);
+			}
+			else if (currentLevel > levels.length)
+			{
+				return null;
+			}
 			return new LevelDescription(levels[currentLevel], texts[currentLevel]);
 		}
 	}
