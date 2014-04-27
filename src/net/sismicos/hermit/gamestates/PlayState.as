@@ -19,7 +19,7 @@ package net.sismicos.hermit.gamestates
 	import net.sismicos.hermit.utils.ColorAux;
 	import net.sismicos.hermit.polar.PolarTileMapLayer;
 	
-	public class DefaultState extends FlxState
+	public class PlayState extends FlxState
 	{
 		private var tilemaps:Array = null;
 		
