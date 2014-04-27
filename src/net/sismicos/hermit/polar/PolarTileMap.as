@@ -3,6 +3,8 @@ package net.sismicos.hermit.polar
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
+	import flash.display.BlendMode;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxBasic;
@@ -13,6 +15,7 @@ package net.sismicos.hermit.polar
 	import net.sismicos.hermit.polar.PolarTileMapLayer;
 	import net.sismicos.hermit.levels.LevelManager;
 	import net.sismicos.hermit.levels.LevelDescription;
+	import org.flixel.FlxSprite;
 	import org.flixel.FlxText;
 	
 	public class PolarTileMap extends FlxObject
@@ -79,7 +82,7 @@ package net.sismicos.hermit.polar
 		override public function draw():void
 		{
 			super.draw();
-			if(textLabel.visible) textLabel.draw();
+			if (textLabel.visible) textLabel.draw();
 		}
 		
 		override public function update():void
@@ -151,7 +154,6 @@ package net.sismicos.hermit.polar
 		{
 			if (layer == PolarTileMapLayer.FIRST) LoadNextLevel();
 			SetLayer(PolarTileMapLayer.GetNextLayer(layer));
-			camera.zoom = layer.zoom;
 			zooming = false;
 		}
 		
