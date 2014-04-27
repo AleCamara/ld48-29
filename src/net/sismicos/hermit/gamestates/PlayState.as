@@ -1,5 +1,6 @@
 package net.sismicos.hermit.gamestates 
 {
+	import adobe.utils.CustomActions;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import net.sismicos.hermit.polar.PolarPlayer;
@@ -28,6 +29,10 @@ package net.sismicos.hermit.gamestates
 		
 		private var activeTilemap:uint = 0;
 		
+		private const WAITINGSTART_TIME:Number = 1;
+		private var waitingStart:Boolean = true;
+		private var waitingCount:Number = 0;
+		
 		override public function create(): void
 		{
 			cameras = FlxG.cameras;
@@ -37,17 +42,28 @@ package net.sismicos.hermit.gamestates
 			tilemaps[0] = new PolarTileMap(PolarTileMapLayer.FIRST)
 			tilemaps[1] = new PolarTileMap(PolarTileMapLayer.SECOND)
 			tilemaps[2] = new PolarTileMap(PolarTileMapLayer.THIRD)
+			tilemaps[0].textLabel.visible = false;
 			add(tilemaps[2]);
 			add(tilemaps[1]);
 			add(tilemaps[0]);
 			
-			player = new PolarPlayer();
+			player = new PolarPlayer(18);
 			add(player);
 		}
 		
 		override public function update():void
 		{
 			super.update();
+			
+			if (waitingStart)
+			{
+				waitingCount >= FlxG.elapsed;
+				if (waitingCount > WAITINGSTART_TIME)
+				{
+					waitingStart = false;
+					(tilemaps[0] as PolarTileMap).textLabel.visible = true;
+				}
+			}
 			
 			(tilemaps[activeTilemap] as PolarTileMap).overlaps(player);
 			
@@ -62,7 +78,7 @@ package net.sismicos.hermit.gamestates
 				(cameras[0] as FlxCamera).flash(0xFFFFFFFF, PLAYER_MOVE_FLASH_TIME);
 				for (var i:uint = 0; i < tilemaps.length; ++i)
 				{
-					(tilemaps[i] as PolarTileMap).BeginZooming();
+					(tilemaps[i] as PolarTileMap).BeginTransition();
 				}
 				activeTilemap = (activeTilemap + 1) % tilemaps.length;
 				player.Unwin();

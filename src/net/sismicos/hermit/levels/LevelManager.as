@@ -28,10 +28,6 @@ package net.sismicos.hermit.levels
 			"there are convoluted layers that in reality are just plain boring",
 			"THE END" ];
 		
-//			"a system can look trivial at first sight"
-//			"but some times it's just appearances",
-//			"something beautiful might be hidden\n\n\t\tBENEATH THE SURFACE",
-		
 		private static var currentLevel:int = -1;
 		
 		public static function GetNextLevel():LevelDescription

@@ -11,12 +11,13 @@ package net.sismicos.hermit.polar
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxG;
+	import org.flixel.FlxSprite;
+	import org.flixel.FlxText;
 	import net.sismicos.hermit.polar.PolarRect;
 	import net.sismicos.hermit.polar.PolarTileMapLayer;
 	import net.sismicos.hermit.levels.LevelManager;
 	import net.sismicos.hermit.levels.LevelDescription;
-	import org.flixel.FlxSprite;
-	import org.flixel.FlxText;
+	import net.sismicos.hermit.utils.ColorAux;
 	
 	public class PolarTileMap extends FlxObject
 	{
@@ -31,14 +32,20 @@ package net.sismicos.hermit.polar
 		
 		private var level:LevelDescription;
 		
-		private var textLabel:FlxText;
+		public var textLabel:FlxText;
 		
-		// ZOOMING
+		// TRANSITION ZOOM
 		private const ZOOM_TIME:Number = 2;
+		
+		// INITIAL ZOOM
+		private const INITIALZOOM:Number = 0.1;
+		private const INITIALZOOM_TIME:Number = 1;
+		
+		private var zoomingCallback:Function = null;
+		private var zoomingCount:Number = 0;
+		private var zoomingTime:Number = 0;
 		private var zooming:Boolean = false;
 		private var zoomingSpeed:Number;
-		private var zoomingTime:Number;
-		private var onZoomingEndCallback:Function = null;
 		
 		public function PolarTileMap(_layer:PolarTileMapLayer)
 		{
@@ -54,6 +61,8 @@ package net.sismicos.hermit.polar
 			textLabel.cameras = new Array();
 			textLabel.cameras[0] = FlxG.cameras[0];
 			textLabel.size = 10;
+			textLabel.color = ColorAux.TEXT_COLOR;
+			textLabel.shadow = ColorAux.TEXT_SHADOW_COLOR;
 			textLabel.visible = false;
 			
 			SetLayer(_layer);
@@ -63,6 +72,9 @@ package net.sismicos.hermit.polar
 			LoadNextLevel();
 			
 			UpdateBuffer();
+			
+			camera.zoom = INITIALZOOM;
+			BeginZooming(INITIALZOOM, layer.zoom, INITIALZOOM_TIME, OnInitialZoomComplete);
 		}
 		
 		public function UpdateCameraRotation(rotation:Number):void
@@ -70,13 +82,10 @@ package net.sismicos.hermit.polar
 			camera.angle = rotation;
 		}
 		
-		public function BeginZooming():void
+		public function BeginTransition():void
 		{
 			textLabel.visible = false;
-			
-			zooming = true;
-			zoomingSpeed = (layer.nextZoom - layer.zoom) / ZOOM_TIME;
-			zoomingTime = 0;
+			BeginZooming(layer.zoom, layer.nextZoom, ZOOM_TIME, OnTransitionComplete);
 		}
 		
 		override public function draw():void
@@ -91,11 +100,12 @@ package net.sismicos.hermit.polar
 			
 			if (zooming)
 			{
-				zoomingTime += FlxG.elapsed;
+				zoomingCount += FlxG.elapsed;
 				camera.zoom += zoomingSpeed * FlxG.elapsed;
-				if (zoomingTime > ZOOM_TIME)
+				if (zoomingCount > zoomingTime)
 				{
-					OnZoomingEnded();
+					if (null != zoomingCallback) zoomingCallback();
+					zooming = false;
 				}
 			}
 		}
@@ -124,6 +134,15 @@ package net.sismicos.hermit.polar
 			return result;
 		}
 		
+		private function BeginZooming(from:Number, to:Number, time:Number, callback:Function):void
+		{
+			zooming = true;
+			zoomingSpeed = (to - from) / time;
+			zoomingCount = 0;
+			zoomingTime = time;
+			zoomingCallback = callback;
+		}
+		
 		private function SetLayer(layer:PolarTileMapLayer):void
 		{
 			this.layer = layer;
@@ -150,11 +169,15 @@ package net.sismicos.hermit.polar
 			}
 		}
 		
-		private function OnZoomingEnded():void
+		private function OnTransitionComplete():void
 		{
 			if (layer == PolarTileMapLayer.FIRST) LoadNextLevel();
 			SetLayer(PolarTileMapLayer.GetNextLayer(layer));
-			zooming = false;
+		}
+		
+		private function OnInitialZoomComplete():void
+		{
+			if (layer == PolarTileMapLayer.FIRST) textLabel.visible = true;
 		}
 		
 		private function LoadNextLevel():void

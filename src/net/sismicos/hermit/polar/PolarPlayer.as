@@ -35,7 +35,7 @@ package net.sismicos.hermit.polar
 		private var prevR:Number = 0;
 		private var prevPhi:Number = 0;
 		
-		private var camera:FlxCamera;
+		protected var camera:FlxCamera;
 		
 		private var isCollidable:Boolean = true;
 		
@@ -278,7 +278,7 @@ package net.sismicos.hermit.polar
 			return new PolarRect(r0, p0, r1 - r0, arc);
 		}
 		
-		private function UpdatePosition():void
+		protected function UpdatePosition():void
 		{
 			// Make sure r is always positive
 			if (r < 0) r = Math.abs(r);

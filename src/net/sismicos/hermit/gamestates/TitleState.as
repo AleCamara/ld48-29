@@ -5,6 +5,7 @@ package net.sismicos.hermit.gamestates
 	import org.flixel.FlxG;
 	import net.sismicos.hermit.Assets;
 	import net.sismicos.hermit.FlickingEntity;
+	import net.sismicos.hermit.utils.ColorAux;
 	
 	public class TitleState extends FlxState
 	{
@@ -28,8 +29,13 @@ package net.sismicos.hermit.gamestates
 			
 			if (FlxG.keys.justReleased("ENTER"))
 			{
-				
+				FlxG.fade(ColorAux.FADEFLASH_COLOR, ColorAux.FADEFLASH_DURATION, LoadNextState);
 			}
+		}
+		
+		private function LoadNextState():void
+		{
+			FlxG.switchState(new IntroState());
 		}
 	}
 
