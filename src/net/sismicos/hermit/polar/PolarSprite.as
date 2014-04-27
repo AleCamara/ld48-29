@@ -64,6 +64,16 @@ package net.sismicos.hermit.polar
 			return PolarAux.GetAngleFromIndex(p + ps);
 		}
 		
+		public function GetPolarPositionIndices():PolarPoint
+		{
+			return new PolarPoint(r, p);
+		}
+		
+		public function GetPolarPosition():PolarPoint
+		{
+			return new PolarPoint(GetInRadius(), GetPhiInitial());
+		}
+		
 		public function GetPolarRect():PolarRect
 		{
 			var r0:Number = GetInRadius();

@@ -3,6 +3,7 @@ package net.sismicos.hermit.gamestates
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import net.sismicos.hermit.polar.PolarPlayer;
+	import net.sismicos.hermit.polar.PolarPoint;
 	import net.sismicos.hermit.polar.PolarTileMap;
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
@@ -20,7 +21,11 @@ package net.sismicos.hermit.gamestates
 	public class DefaultState extends FlxState
 	{
 		private var tilemaps:Array = null;
+		
+		private const PLAYER_MOVE_TIME:Number = 2;
+		private const PLAYER_MOVE_FLASH_TIME:Number = 1.5;
 		private var player:PolarPlayer = null;
+		private var playerInitialPos:PolarPoint = null;
 		
 		private var activeTilemap:PolarTileMap;
 		
@@ -43,6 +48,7 @@ package net.sismicos.hermit.gamestates
 			add(tilemaps[0]);
 			
 			player = new PolarPlayer();
+			playerInitialPos = player.GetPolarPositionIndices();
 			add(player);
 		}
 		
@@ -51,6 +57,13 @@ package net.sismicos.hermit.gamestates
 			super.update();
 			
 			activeTilemap.overlaps(player);
+			
+			// Check die condition
+			if (FlxG.keys.justReleased("A") || player.HasDied())
+			{
+				(cameras[0] as FlxCamera).flash(0xFFFFFFFF, PLAYER_MOVE_FLASH_TIME);
+				player.MoveTo(playerInitialPos, PLAYER_MOVE_TIME);
+			}
 			
 			UpdateCameras();
 		}

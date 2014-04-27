@@ -35,12 +35,19 @@ package net.sismicos.hermit.polar
 		
 		private var camera:FlxCamera;
 		
+		private var isCollidable:Boolean = true;
+		
 		private var unmovable:Boolean = false;
+		private var isMoving:Boolean = false;
+		private var moveSpeedR:Number = 0;
+		private var moveSpeedPhi:Number = 0;
+		private var moveTime:Number = 0;
+		private var moveDuration:Number = 0;
 		
 		private var hasWon:Boolean = false;
 		private var hasDied:Boolean = false;
 		
-		public function PolarPlayer(_r:Number = 10, _p:Number = 0, _rs:Number = 0.1, _ps:Number = 0.1) 
+		public function PolarPlayer(_r:Number = 10, _p:Number = 0.5, _rs:Number = 0.1, _ps:Number = 0.1) 
 		{
 			super(_r, _p, _rs, _ps);
 			
@@ -60,6 +67,29 @@ package net.sismicos.hermit.polar
 			loadGraphic(Assets.PNG_PLAYER, false);
 		}
 		
+		public function MoveTo(target:PolarPoint, duration:Number)
+		{
+			unmovable = true;
+			isCollidable = false;
+			isMoving = true;
+			
+			moveSpeedR = (target.r - r) / duration;
+			moveSpeedPhi = (target.phi - p) / duration;
+			if (p > target.phi)
+			{
+				var altSpeedPhi:Number = ((target.phi + PolarAux.numAngles - 1) - p) / duration;
+				if (Math.abs(altSpeedPhi) < Math.abs(moveSpeedPhi)) moveSpeedPhi = altSpeedPhi;
+			}
+			else
+			{
+				var altSpeedPhi:Number = (p - (target.phi - PolarAux.numAngles + 1)) / duration;
+				if (Math.abs(altSpeedPhi) < Math.abs(moveSpeedPhi)) moveSpeedPhi = altSpeedPhi;
+			}
+			
+			moveTime = 0;
+			moveDuration = duration;
+		}
+		
 		public function MakeUnmovable():void
 		{
 			unmovable = true;
@@ -72,86 +102,20 @@ package net.sismicos.hermit.polar
 			unmovable = false;
 		}
 		
-		override public function update():void
+		public function HasDied():Boolean
 		{
-			super.update();
-			
-			prevR = GetRadiusIndex();
-			prevPhi = GetPhiIndex();
-			
-			var timestep:Number = FlxG.elapsed;
-				
-			if (!unmovable)
-			{
-				// Lateral displacement
-				if (FlxG.keys.RIGHT)
-				{
-					ddp += dp;
-				}
-				if (FlxG.keys.LEFT)
-				{
-					ddp -= dp;
-				}
-				
-				// Vertical displacement
-				if (isTouchingFloor && FlxG.keys.justPressed("UP"))
-				{
-					ddr += dr;
-					isTouchingFloor = false;
-				}
-				if (forceReleaseJump || FlxG.keys.justReleased("UP"))
-				{
-					ddr = 0;
-					forceReleaseJump = false;
-				}
-			}
-			
-			// Clamp displacement
-			var ddrFinal:Number = ExtraMath.Clamp(ddr, -drMax * timestep, drMax * timestep);
-			var ddpFinal:Number = ExtraMath.Clamp(ddp, -dpMax * timestep, dpMax * timestep);
-			
-			// Update position
-			r += ddrFinal * timestep;
-			p += ddpFinal * timestep;
-			UpdatePosition();
-			
-			// Reset lateral displacement
-			ddp = 0;
-			
-			// Gravity
-			ddr -= gravity * timestep;
+			return hasDied;
 		}
 		
-		override public function draw():void
+		public function HasWon():Boolean
 		{
-			// Funky and expensive trail effect
-			camera.buffer.colorTransform(camera.buffer.rect, new ColorTransform(1, 1, 1, 0.9));
-			super.draw();
-		}
-		
-		private function UpdatePosition():void
-		{
-			// Make sure r is always positive
-			if (r < 0) r = Math.abs(r);
-			
-			// Make sure p is in the range [0, NA-1)
-			while (p < 0) p += PolarAux.numAngles - 1;
-			while (p >= PolarAux.numAngles) p -= PolarAux.numAngles - 1;
-			
-			// Global position
-			var pos:FlxPoint = PolarAux.CalculateCartesianPointFromIndex(r, p);
-			x = pos.x;
-			y = pos.y;
-			
-			// Orient apex toward centre
-			var a:Number = PolarAux.GetAngleFromIndex(p) * (180.0 / Math.PI) - 90;
-			angle = a;
-			
-			camera.angle = -(GetPhiInitial() * (180.0 / Math.PI)) - 90;
+			return hasWon;
 		}
 		
 		public function CollidesWith(object:PolarObject):void
 		{
+			if (!isCollidable) return; 
+			
 			var newR:Number = r;
 			var newPhi:Number = p;
 			var finalR:Number = newR;
@@ -199,7 +163,77 @@ package net.sismicos.hermit.polar
 			r = finalR;
 			p = finalPhi;
 			
-			UpdatePosition();			
+			UpdatePosition();
+		}
+		
+		override public function update():void
+		{
+			super.update();
+			
+			prevR = GetRadiusIndex();
+			prevPhi = GetPhiIndex();
+			
+			var timestep:Number = FlxG.elapsed;
+				
+			if (!unmovable)
+			{
+				// Lateral displacement
+				if (FlxG.keys.RIGHT)
+				{
+					ddp += dp;
+				}
+				if (FlxG.keys.LEFT)
+				{
+					ddp -= dp;
+				}
+				
+				// Vertical displacement
+				if (isTouchingFloor && FlxG.keys.justPressed("UP"))
+				{
+					ddr += dr;
+					isTouchingFloor = false;
+				}
+				if (forceReleaseJump || FlxG.keys.justReleased("UP"))
+				{
+					ddr = 0;
+					forceReleaseJump = false;
+				}
+			}
+			
+			// Clamp displacement
+			var ddrFinal:Number = ExtraMath.Clamp(ddr, -drMax * timestep, drMax * timestep);
+			var ddpFinal:Number = ExtraMath.Clamp(ddp, -dpMax * timestep, dpMax * timestep);
+			
+			// Ignore clamp and everything else when autonomously moving
+			if (isMoving)
+			{
+				moveTime += timestep;
+				ddrFinal = moveSpeedR;
+				ddpFinal = moveSpeedPhi;
+				
+				if (moveTime > moveDuration)
+				{
+					OnMoveToFinished();
+				}
+			}
+			
+			// Update position
+			r += ddrFinal * timestep;
+			p += ddpFinal * timestep;
+			UpdatePosition();
+			
+			// Reset lateral displacement
+			ddp = 0;
+			
+			// Gravity
+			ddr -= gravity * timestep;
+		}
+		
+		override public function draw():void
+		{
+			// Funky and expensive trail effect
+			camera.buffer.colorTransform(camera.buffer.rect, new ColorTransform(1, 1, 1, 0.9));
+			super.draw();
 		}
 		
 		override public function GetPolarRect():PolarRect
@@ -210,6 +244,34 @@ package net.sismicos.hermit.polar
 			var arc:Number = Math.abs(Math.tan(width / r1));
 			var p0:Number = GetPhiInitial() - arc * 0.5;
 			return new PolarRect(r0, p0, r1 - r0, arc);
+		}
+		
+		private function UpdatePosition():void
+		{
+			// Make sure r is always positive
+			if (r < 0) r = Math.abs(r);
+			
+			// Make sure p is in the range [0, NA-1)
+			while (p < 0) p += PolarAux.numAngles - 1;
+			while (p >= PolarAux.numAngles) p -= PolarAux.numAngles - 1;
+			
+			// Global position
+			var pos:FlxPoint = PolarAux.CalculateCartesianPointFromIndex(r, p);
+			x = pos.x;
+			y = pos.y;
+			
+			// Orient apex toward centre
+			var a:Number = PolarAux.GetAngleFromIndex(p) * (180.0 / Math.PI) - 90;
+			angle = a;
+			
+			camera.angle = -(GetPhiInitial() * (180.0 / Math.PI)) - 90;
+		}
+		
+		private function OnMoveToFinished():void
+		{
+			unmovable = false;
+			isMoving = false;
+			isCollidable = true;
 		}
 	}
 
