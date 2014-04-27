@@ -67,7 +67,7 @@ package net.sismicos.hermit.polar
 			loadGraphic(Assets.PNG_PLAYER, false);
 		}
 		
-		public function MoveTo(target:PolarPoint, duration:Number)
+		public function MoveTo(target:PolarPoint, duration:Number):void
 		{
 			unmovable = true;
 			isCollidable = false;
@@ -75,19 +75,25 @@ package net.sismicos.hermit.polar
 			
 			moveSpeedR = (target.r - r) / duration;
 			moveSpeedPhi = (target.phi - p) / duration;
+			var altSpeedPhi:Number;
 			if (p > target.phi)
 			{
-				var altSpeedPhi:Number = ((target.phi + PolarAux.numAngles - 1) - p) / duration;
+				altSpeedPhi = ((target.phi + PolarAux.numAngles - 1) - p) / duration;
 				if (Math.abs(altSpeedPhi) < Math.abs(moveSpeedPhi)) moveSpeedPhi = altSpeedPhi;
 			}
 			else
 			{
-				var altSpeedPhi:Number = (p - (target.phi - PolarAux.numAngles + 1)) / duration;
+				altSpeedPhi = (p - (target.phi - PolarAux.numAngles + 1)) / duration;
 				if (Math.abs(altSpeedPhi) < Math.abs(moveSpeedPhi)) moveSpeedPhi = altSpeedPhi;
 			}
 			
 			moveTime = 0;
 			moveDuration = duration;
+		}
+		
+		public function Undie():void
+		{
+			hasDied = false;
 		}
 		
 		public function MakeUnmovable():void

@@ -59,10 +59,11 @@ package net.sismicos.hermit.gamestates
 			activeTilemap.overlaps(player);
 			
 			// Check die condition
-			if (FlxG.keys.justReleased("A") || player.HasDied())
+			if (player.HasDied())
 			{
 				(cameras[0] as FlxCamera).flash(0xFFFFFFFF, PLAYER_MOVE_FLASH_TIME);
 				player.MoveTo(playerInitialPos, PLAYER_MOVE_TIME);
+				player.Undie();
 			}
 			
 			UpdateCameras();

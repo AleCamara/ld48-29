@@ -62,6 +62,10 @@ package net.sismicos.hermit.polar
 						var tileType:PolarTileType;
 						switch(pixelColor)
 						{
+							case 0x0000FF:
+								tileType = PolarTileType.CHECKPOINT;
+								break;
+								
 							case 0xFF0000:
 								tileType = PolarTileType.DANGEROUS;
 								break;

@@ -15,6 +15,9 @@ package net.sismicos.hermit.utils
 			0xFF00CC00, 0xFF39E639, 0xFF67E667,
 			0xFFFF9400, 0xFFFFAE40, 0xFFFFC473,
 			0xFF0B5FA5, 0xFF3F8FD2, 0xFF66A1D1 ];
+			
+		public static const CHECKPOINT_COLORS:Array = [
+			0xFF66A1D2 ];
 		
 		public static const GOAL_COLORS:Array = [
 			0x0067E667, 0xFF67E667, 0xFF67E667,
@@ -27,6 +30,9 @@ package net.sismicos.hermit.utils
 		{
 			switch (type)
 			{
+				case PolarTileType.CHECKPOINT:
+					return CHECKPOINT_COLORS[0];
+				
 				case PolarTileType.DANGEROUS:
 					return DANGER_COLORS[0];
 					
