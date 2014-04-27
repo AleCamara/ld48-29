@@ -3,48 +3,33 @@ package net.sismicos.hermit.utils
 	import net.sismicos.hermit.polar.PolarTileType;
 	public class ColorAux 
 	{
-		public static const NORMAL_COLORS:Array = [
-			0xFF67E667, 0xFF67E667, 0xFF67E667,
-			0xFF67E667, 0xFF67E667, 0xFF67E667,
-			0xFF00CC00, 0xFF39E639, 0xFF67E667,
-			0xFFFF0000, 0xFFFF4040, 0xFFFF7373 ];
-		
-		public static const DANGER_COLORS:Array = [
-			0xFFFF7373, 0xFFFF7373, 0xFFFF7373,
-			0xFF67E667, 0xFF67E667, 0xFF67E667,
-			0xFF00CC00, 0xFF39E639, 0xFF67E667,
-			0xFFFF9400, 0xFFFFAE40, 0xFFFFC473,
-			0xFF0B5FA5, 0xFF3F8FD2, 0xFF66A1D1 ];
+		public static const NORMAL_COLOR:uint     = 0xFF3CA0D0;
+		public static const DANGER_COLOR:uint     = 0xFFFF4040;
+		public static const CHECKPOINT_COLOR:uint = 0xFF39E639;
+		public static const GOAL_COLOR:uint       = 0x00FFFFFF;
 			
-		public static const CHECKPOINT_COLORS:Array = [
-			0xFF66A1D2 ];
+		public static const BACKGROUND_COLOR:uint = 0xFF505050;
 		
-		public static const GOAL_COLORS:Array = [
-			0x0067E667, 0xFF67E667, 0xFF67E667,
-			0xFF00CC00, 0xFF39E639, 0xFF67E667,
-			0xFFFF0000, 0xFFFF4040, 0xFFFF7373,
-			0xFFFF9400, 0xFFFFAE40, 0xFFFFC473,
-			0xFF0B5FA5, 0xFF3F8FD2, 0xFF66A1D1 ];
+		public static const PLAYER_COLOR:uint     = 0xFFFFA640;
 			
 		public static function GetTileColor(type:PolarTileType):uint
 		{
 			switch (type)
 			{
 				case PolarTileType.CHECKPOINT:
-					return CHECKPOINT_COLORS[0];
+					return CHECKPOINT_COLOR;
 				
 				case PolarTileType.DANGEROUS:
-					return DANGER_COLORS[0];
+					return DANGER_COLOR;
 					
 				case PolarTileType.GOAL:
-					return GOAL_COLORS[0];
+					return GOAL_COLOR;
 					
 				case PolarTileType.NORMAL:
 				default:
-					return NORMAL_COLORS[0];
+					return NORMAL_COLOR;
 			}
 		}
-		
 	}
 
 }

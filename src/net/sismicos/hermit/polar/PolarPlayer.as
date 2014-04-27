@@ -11,6 +11,7 @@ package net.sismicos.hermit.polar
 	import net.sismicos.hermit.Assets;
 	import net.sismicos.hermit.polar.PolarSprite;
 	import net.sismicos.hermit.utils.ExtraMath;
+	import net.sismicos.hermit.utils.ColorAux;
 	
 	public class PolarPlayer extends PolarSprite
 	{
@@ -65,7 +66,7 @@ package net.sismicos.hermit.polar
 			cameras[0] = camera;
 			
 			antialiasing = false;
-			color = 0xE0E0E0;
+			color = ColorAux.PLAYER_COLOR;
 			offset.x = 5;
 			offset.y = 5;
 			

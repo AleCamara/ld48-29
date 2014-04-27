@@ -31,7 +31,7 @@ package net.sismicos.hermit.gamestates
 		override public function create(): void
 		{
 			cameras = FlxG.cameras;
-			cameras[0].bgColor = 0xFF444444;
+			cameras[0].bgColor = ColorAux.BACKGROUND_COLOR;
 			
 			if (!tilemaps) tilemaps = new Array();
 			tilemaps[0] = new PolarTileMap(PolarTileMapLayer.FIRST)
