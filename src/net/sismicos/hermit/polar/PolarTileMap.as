@@ -33,6 +33,7 @@ package net.sismicos.hermit.polar
 		private var level:LevelDescription;
 		
 		private var textLabel:FlxText;
+		private var tutorialLabel:FlxText;
 		
 		// TRANSITION ZOOM
 		private const ZOOM_TIME:Number = 2;
@@ -72,6 +73,15 @@ package net.sismicos.hermit.polar
 			textLabel.alignment = "center";
 			textLabel.visible = false;
 			
+			tutorialLabel = new FlxText(150, 750, 500, "");
+			tutorialLabel.cameras = new Array();
+			tutorialLabel.cameras[0] = FlxG.cameras[0];
+			tutorialLabel.size = 14;
+			tutorialLabel.color = ColorAux.TEXT_COLOR;
+			tutorialLabel.shadow = ColorAux.TEXT_SHADOW_COLOR;
+			tutorialLabel.alignment = "center";
+			tutorialLabel.visible = false;
+			
 			SetLayer(_layer);
 			
 			tiles = new Array();
@@ -92,6 +102,7 @@ package net.sismicos.hermit.polar
 		public function BeginTransition():void
 		{
 			textLabel.visible = false;
+			tutorialLabel.visible = false;
 			BeginZooming(layer.zoom, layer.nextZoom, ZOOM_TIME, OnTransitionComplete);
 		}
 		
@@ -99,6 +110,7 @@ package net.sismicos.hermit.polar
 		{
 			super.draw();
 			if (textLabel.visible) textLabel.draw();
+			if (tutorialLabel.visible) tutorialLabel.draw();
 		}
 		
 		override public function update():void
@@ -172,9 +184,14 @@ package net.sismicos.hermit.polar
 				else
 				{
 					textLabel.visible = true;
+					tutorialLabel.visible = true;
 				}
 			}
-			else textLabel.visible = false;
+			else
+			{
+				textLabel.visible = false;
+				tutorialLabel.visible = false;
+			}
 		}
 		
 		private function AddTile(r:uint, p:uint, tile:PolarTile):void
@@ -203,7 +220,11 @@ package net.sismicos.hermit.polar
 		
 		private function OnInitialZoomComplete():void
 		{
-			if (layer == PolarTileMapLayer.FIRST) textLabel.visible = true;
+			if (layer == PolarTileMapLayer.FIRST)
+			{
+				textLabel.visible = true;
+				tutorialLabel.visible = true;
+			}
 		}
 		
 		private function LoadNextLevel():void
@@ -268,6 +289,10 @@ package net.sismicos.hermit.polar
 			if (null != level.text)
 			{
 				textLabel.text = level.text;
+			}
+			if (null != level.tutorial)
+			{
+				tutorialLabel.text = level.tutorial;
 			}
 			
 			UpdateBuffer();

@@ -40,7 +40,20 @@ package net.sismicos.hermit.levels
 			"there's something here that strongly ATTRACTS me; like a moth to a flame",
 			"this obsesion might be dangerous, even fatal, but i can't help it",
 			"it's not how SHE is; it's more what i am when i'm close to HER",
-			"i'll never regret looking BENEATH THE SURFACE; where i found YOU" ];
+			"" ];
+			
+		
+		private static const tutorials:Array = [
+			"TUTORIAL: move our intrepid friend with left and right cursors",
+			"TUTORIAL: jump using cursor up; double jump pressing up again in mid-air",
+			"TUTORIAL: avoid red zone if you care for this little fellah",
+			"TUTORIAL: green zones are cool; they save your position in case you miss a jump",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"" ];
 		
 		private static var currentLevel:int = -1;
 		
@@ -50,13 +63,13 @@ package net.sismicos.hermit.levels
 			
 			if (currentLevel == levels.length)
 			{
-				return new LevelDescription(null, texts[currentLevel]);
+				return new LevelDescription(null, texts[currentLevel], tutorials[currentLevel]);
 			}
 			else if (currentLevel > levels.length)
 			{
 				return null;
 			}
-			return new LevelDescription(levels[currentLevel], texts[currentLevel]);
+			return new LevelDescription(levels[currentLevel], texts[currentLevel], tutorials[currentLevel]);
 		}
 	}
 
