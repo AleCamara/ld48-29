@@ -12,21 +12,35 @@ package net.sismicos.hermit.levels
 		[Embed(source = "../../../../../levels/level_03.png")] private static const LVL_03:Class;
 		[Embed(source = "../../../../../levels/level_04.png")] private static const LVL_04:Class;
 		[Embed(source = "../../../../../levels/level_05.png")] private static const LVL_05:Class;
+		[Embed(source = "../../../../../levels/level_06.png")] private static const LVL_06:Class;
+		[Embed(source = "../../../../../levels/level_07.png")] private static const LVL_07:Class;
+		[Embed(source = "../../../../../levels/level_08.png")] private static const LVL_08:Class;
+		[Embed(source = "../../../../../levels/level_09.png")] private static const LVL_09:Class;
+		[Embed(source = "../../../../../levels/level_10.png")] private static const LVL_10:Class;
 		
 		private static const levels:Array = [
 			LVL_01,
 			LVL_02,
 			LVL_03,
 			LVL_04,
-			LVL_05 ];
+			LVL_05,
+			LVL_06,
+			LVL_07,
+			LVL_08,
+			LVL_09,
+			LVL_10 ];
 			
 		private static const texts:Array = [
 			"systems are made of layers\nonce you understand a layer, you can proceed to the next one",
-			"some layers require a bit of effor to understand",
-			"understanding some layers can be a painful process",
-			"but the things you've learnt are not easily forgotten",
-			"there are convoluted layers that in reality are just plain boring",
-			"THE END" ];
+			"understanding a system is a learning process; very rewarding ...",
+			"... and some times painful and frustrating",
+			"thankfully not all the things you learn are easily forgotten",
+			"this one i'm pointing at is the most complex system i've ever met",
+			"i've been studying systems for years, yet this one still surprises me often!",
+			"there's something here that strongly ATTRACTS me; like a moth to a flame",
+			"this obsesion might be dangerous, even fatal, but i can't help it",
+			"it's not how SHE is; it's more what i am when i'm close to HER",
+			"i'll never regret looking BENEATH THE SURFACE; where i found YOU" ];
 		
 		private static var currentLevel:int = -1;
 		

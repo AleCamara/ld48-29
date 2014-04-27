@@ -219,16 +219,16 @@ package net.sismicos.hermit.polar
 				}
 				
 				// Vertical displacement
-				if ((isTouchingFloor || doubleJumpEnabled) && FlxG.keys.justPressed("UP"))
-				{
-					ddr += dr;
-					isTouchingFloor = false;
-				}
 				if (forceReleaseJump || FlxG.keys.justReleased("UP"))
 				{
 					ddr = 0;
 					doubleJumpEnabled = (!forceReleaseJump && !doubleJumpEnabled);
 					forceReleaseJump = false;
+				}
+				if ((isTouchingFloor || doubleJumpEnabled) && FlxG.keys.justPressed("UP"))
+				{
+					ddr = dr;
+					isTouchingFloor = false;
 				}
 			}
 			

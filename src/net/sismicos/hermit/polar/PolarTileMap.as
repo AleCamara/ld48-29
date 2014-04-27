@@ -63,6 +63,7 @@ package net.sismicos.hermit.polar
 			textLabel.size = 10;
 			textLabel.color = ColorAux.TEXT_COLOR;
 			textLabel.shadow = ColorAux.TEXT_SHADOW_COLOR;
+			textLabel.alignment = "center";
 			textLabel.visible = false;
 			
 			SetLayer(_layer);
