@@ -4,7 +4,7 @@ package net.sismicos.hermit.polar
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
 	import flash.geom.Point;
-	import org.flixel.FlxGroup;
+	import org.flixel.FlxObject;
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxObject;
@@ -13,6 +13,7 @@ package net.sismicos.hermit.polar
 	import net.sismicos.hermit.polar.PolarTileMapLayer;
 	import net.sismicos.hermit.levels.LevelManager;
 	import net.sismicos.hermit.levels.LevelDescription;
+	import org.flixel.FlxText;
 	
 	public class PolarTileMap extends FlxObject
 	{
@@ -27,6 +28,8 @@ package net.sismicos.hermit.polar
 		
 		private var level:LevelDescription;
 		
+		private var textLabel:FlxText;
+		
 		// ZOOMING
 		private const ZOOM_TIME:Number = 2;
 		private var zooming:Boolean = false;
@@ -36,18 +39,23 @@ package net.sismicos.hermit.polar
 		
 		public function PolarTileMap(_layer:PolarTileMapLayer)
 		{
-			layer = _layer;
-			
-			tiles = new Array();
-			
 			camera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-			camera.zoom = layer.zoom;
 			camera.antialiasing = true;
 			camera.bgColor = 0x00000000;
 			FlxG.addCamera(camera);
 			
 			cameras = new Array();
 			cameras[0] = camera;
+			
+			textLabel = new FlxText(10, 10, 300, "");
+			textLabel.cameras = new Array();
+			textLabel.cameras[0] = FlxG.cameras[0];
+			textLabel.size = 10;
+			textLabel.visible = false;
+			
+			SetLayer(_layer);
+			
+			tiles = new Array();
 			
 			LoadNextLevel();
 			
@@ -61,9 +69,17 @@ package net.sismicos.hermit.polar
 		
 		public function BeginZooming():void
 		{
+			textLabel.visible = false;
+			
 			zooming = true;
 			zoomingSpeed = (layer.nextZoom - layer.zoom) / ZOOM_TIME;
 			zoomingTime = 0;
+		}
+		
+		override public function draw():void
+		{
+			super.draw();
+			if(textLabel.visible) textLabel.draw();
 		}
 		
 		override public function update():void
@@ -105,6 +121,14 @@ package net.sismicos.hermit.polar
 			return result;
 		}
 		
+		private function SetLayer(layer:PolarTileMapLayer):void
+		{
+			this.layer = layer;
+			camera.zoom = layer.zoom;
+			if (layer == PolarTileMapLayer.FIRST) textLabel.visible = true;
+			else textLabel.visible = false;
+		}
+		
 		private function AddTile(r:uint, p:uint, tile:PolarTile):void
 		{
 			tiles.push(tile);
@@ -126,7 +150,7 @@ package net.sismicos.hermit.polar
 		private function OnZoomingEnded():void
 		{
 			if (layer == PolarTileMapLayer.FIRST) LoadNextLevel();
-			layer = PolarTileMapLayer.GetNextLayer(layer);
+			SetLayer(PolarTileMapLayer.GetNextLayer(layer));
 			camera.zoom = layer.zoom;
 			zooming = false;
 		}
@@ -134,16 +158,16 @@ package net.sismicos.hermit.polar
 		private function LoadNextLevel():void
 		{
 			level = LevelManager.GetNextLevel();
-			LoadMap(level.data);
+			LoadMap();
 		}
 		
-		private function LoadMap(image:Class):void
+		private function LoadMap():void
 		{
 			ClearTiles();
 			
-			if (null != image)
+			if (null != level.data)
 			{
-				var tempBM:BitmapData = FlxG.addBitmap(image);
+				var tempBM:BitmapData = FlxG.addBitmap(level.data);
 				if (!PolarAux.IsBitmapALevel(tempBM))
 					throw new Error("Trying to load a bitmap that does not represent a level.");
 				
@@ -179,6 +203,11 @@ package net.sismicos.hermit.polar
 						}
 					}
 				}
+			}
+			
+			if (null != level.text)
+			{
+				textLabel.text = level.text;
 			}
 			
 			UpdateBuffer();

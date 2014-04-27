@@ -12,16 +12,26 @@ package net.sismicos.hermit.levels
 			LVL_DUMMY2,
 			LVL_DUMMY,
 			LVL_DUMMY ];
-		private static var nextLevel:uint = 0;
+			
+		private static const texts:Array = [
+			"This is a long text 0.",
+			"This is a long text 1.",
+			"This is a long text 2.",
+			"This is a long text 3.",
+			"THE END" ];
+		
+		
+		private static var currentLevel:int = -1;
 		
 		public static function GetNextLevel():LevelDescription
 		{
-			if (nextLevel >= levels.length)
+			if (currentLevel >= levels.length)
 			{
-				return new LevelDescription(null);
+				return new LevelDescription(null, levels[currentLevel]);
 			}
 			
-			return new LevelDescription(levels[nextLevel++]);
+			++currentLevel;
+			return new LevelDescription(levels[currentLevel], texts[currentLevel]);
 		}
 	}
 
