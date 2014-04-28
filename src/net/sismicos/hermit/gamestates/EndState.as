@@ -23,7 +23,7 @@ package net.sismicos.hermit.gamestates
 			"dedicated to Maru\nwe make the best team ;-)",
 			"",
 			"designed, programmed, tested, and hated in 48 hours",
-			"alejandro camara\napril 2014",
+			"alejandro cámara\napril 2014",
 			"",
 			"THANKS FOR PLAYING"];
 		private var currentText:uint = 0;
